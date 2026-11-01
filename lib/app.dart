@@ -5,42 +5,49 @@ import 'features/language/data/datasources/language_local_data_source.dart';
 import 'features/language/data/repositories/language_repository_impl.dart';
 import 'features/language/domain/usecases/get_languages.dart';
 import 'features/language/domain/usecases/select_language.dart';
-import 'features/language/presentation/providers/language_provider.dart';
 import 'features/language/presentation/pages/choose_language_page.dart';
+import 'features/language/presentation/providers/language_provider.dart';
+import 'features/register/data/datasources/register_mock_data_source.dart';
+import 'features/register/data/repositories/register_repository_impl.dart';
+import 'features/register/domain/usecases/register_user.dart';
+import 'features/register/presentation/pages/register_page.dart';
+import 'features/register/presentation/providers/register_provider.dart';
 
-/// Root of the widget tree.
-///
-/// Dependency graph assembled here (composition root):
-///   LocalDataSource → RepositoryImpl → UseCases → Provider
-///
-/// [onLanguageConfirmed] callback on [LanguageProvider] is intentionally
-/// left null here. Replace `null` with a Navigator push when Screen 2
-/// (Register) is built.
+/// Root of the widget tree with dependency graph composition.
 class CalleyApp extends StatelessWidget {
   const CalleyApp({super.key});
 
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
-    // ── Wire the dependency graph ──────────────────────────────────────
-    final dataSource = const LanguageLocalDataSource();
-    final repository = LanguageRepositoryImpl(dataSource);
-    final getLanguages = GetLanguages(repository);
-    final selectLanguage = SelectLanguage(repository);
+    final languageRepo = LanguageRepositoryImpl(
+      const LanguageLocalDataSource(),
+    );
+    final registerRepo = RegisterRepositoryImpl(
+      const RegisterMockDataSource(),
+    );
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<LanguageProvider>(
           create: (_) => LanguageProvider(
-            getLanguages: getLanguages,
-            selectLanguage: selectLanguage,
-            // TODO(navigation): replace null with a push to RegisterPage
-            // once Screen 2 is implemented.
-            onConfirmed: null,
+            getLanguages: GetLanguages(languageRepo),
+            selectLanguage: SelectLanguage(languageRepo),
+            onConfirmed: (_) => navigatorKey.currentState?.push(
+              MaterialPageRoute(builder: (_) => const RegisterPage()),
+            ),
+          ),
+        ),
+        ChangeNotifierProvider<RegisterProvider>(
+          create: (_) => RegisterProvider(
+            registerUser: RegisterUser(registerRepo),
           ),
         ),
       ],
       child: MaterialApp(
         title: 'Calley',
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         home: const ChooseLanguagePage(),
