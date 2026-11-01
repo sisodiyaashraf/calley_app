@@ -1,6 +1,7 @@
 import '../entities/sign_in_request.dart';
 
-/// Contract that the data layer must fulfill for user sign-in.
+/// Contract that the data layer must fulfill for user sign-in and sign-out.
 abstract class SignInRepository {
   Future<bool> signIn(SignInRequest request);
+  Future<void> logout();
 }

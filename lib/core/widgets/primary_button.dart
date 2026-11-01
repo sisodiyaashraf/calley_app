@@ -5,26 +5,32 @@ import '../constants/app_dimens.dart';
 import '../constants/app_strings.dart';
 
 /// Reusable full-width primary button used across all screens.
-///
-/// [label]       – button text (defaults to [AppStrings.select]).
-/// [onPressed]   – callback; pass null to disable the button.
-/// [isLoading]   – when true, displays a centred loading spinner.
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     super.key,
     this.label = AppStrings.select,
     required this.onPressed,
     this.isLoading = false,
+    this.height,
+    this.radius,
+    this.textStyle,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final bool isLoading;
+  final double? height;
+  final double? radius;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveHeight = height ?? AppDimens.buttonHeight;
+    final effectiveRadius = radius ?? AppDimens.buttonBorderRadius;
+    final effectiveStyle = textStyle ?? AppTextStyles.buttonLabel;
+
     return SizedBox(
-      height: AppDimens.buttonHeight,
+      height: effectiveHeight,
       width: double.infinity,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
@@ -34,7 +40,7 @@ class PrimaryButton extends StatelessWidget {
               ? AppColors.primary
               : AppColors.primary.withValues(alpha: 0.5),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimens.buttonBorderRadius),
+            borderRadius: BorderRadius.circular(effectiveRadius),
           ),
           elevation: 0,
           padding: EdgeInsets.zero,
@@ -45,11 +51,10 @@ class PrimaryButton extends StatelessWidget {
                 width: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(AppColors.buttonText),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.buttonText),
                 ),
               )
-            : Text(label, style: AppTextStyles.buttonLabel),
+            : Text(label, style: effectiveStyle),
       ),
     );
   }

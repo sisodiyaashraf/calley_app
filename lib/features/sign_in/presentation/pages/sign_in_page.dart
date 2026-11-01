@@ -25,8 +25,8 @@ class SignInPage extends StatelessWidget {
     final ok = await p.submit();
     if (!context.mounted) return;
     if (ok) {
-      onSignedIn != null ? onSignedIn!() : ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(AppStrings.signedInSuccess)));
+      final cb = onSignedIn ?? p.onSignedIn;
+      cb != null ? cb() : AppRouter.toMain(context);
     } else if (p.generalError != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(p.generalError!), backgroundColor: AppColors.errorText));

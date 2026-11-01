@@ -10,4 +10,7 @@ class SignInRepositoryImpl implements SignInRepository {
 
   @override
   Future<bool> signIn(SignInRequest request) => _dataSource.signIn(request);
+
+  @override
+  Future<void> logout() => _dataSource.logout();
 }

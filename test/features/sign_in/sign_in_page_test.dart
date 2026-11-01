@@ -13,6 +13,8 @@ import 'package:calley_app/features/sign_in/presentation/providers/sign_in_provi
 class _FakeSignInRepo implements SignInRepository {
   @override
   Future<bool> signIn(SignInRequest request) async => true;
+  @override
+  Future<void> logout() async {}
 }
 
 Widget createTestableSignInWidget({

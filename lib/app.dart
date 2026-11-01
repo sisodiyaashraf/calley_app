@@ -1,7 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/navigation/app_router.dart';
+import 'core/navigation/nav_provider.dart';
 import 'core/theme/app_theme.dart';
+import 'features/app_drawer/domain/usecases/get_drawer_items.dart';
+import 'features/app_drawer/domain/usecases/logout_user.dart';
+import 'features/app_drawer/presentation/providers/drawer_provider.dart';
+import 'features/calling_lists/data/datasources/calling_list_mock_data_source.dart';
+import 'features/calling_lists/data/repositories/calling_list_repository_impl.dart';
+import 'features/calling_lists/domain/usecases/get_calling_lists.dart';
+import 'features/calling_lists/domain/usecases/refresh_calling_lists.dart';
+import 'features/calling_lists/presentation/providers/calling_list_provider.dart';
+import 'features/dashboard/data/datasources/dashboard_mock_data_source.dart';
+import 'features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'features/dashboard/domain/usecases/get_call_stats.dart';
+import 'features/dashboard/domain/usecases/get_dashboard_info.dart';
+import 'features/dashboard/presentation/providers/dashboard_provider.dart';
+import 'features/home/data/datasources/home_mock_data_source.dart';
+import 'features/home/data/repositories/home_repository_impl.dart';
+import 'features/home/domain/usecases/get_user_profile.dart';
+import 'features/home/presentation/providers/home_provider.dart';
 import 'features/language/data/datasources/language_local_data_source.dart';
 import 'features/language/data/repositories/language_repository_impl.dart';
 import 'features/language/domain/usecases/get_languages.dart';
@@ -29,43 +47,35 @@ class CalleyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final languageRepo = LanguageRepositoryImpl(const LanguageLocalDataSource());
-    final registerRepo = RegisterRepositoryImpl(const RegisterMockDataSource());
+    final langRepo = LanguageRepositoryImpl(const LanguageLocalDataSource());
+    final regRepo = RegisterRepositoryImpl(const RegisterMockDataSource());
     final otpRepo = OtpRepositoryImpl(const OtpMockDataSource());
     final signInRepo = SignInRepositoryImpl(const SignInMockDataSource());
+    final homeRepo = HomeRepositoryImpl(const HomeMockDataSource());
+    final dashRepo = DashboardRepositoryImpl(const DashboardMockDataSource());
+    final listRepo = CallingListRepositoryImpl(const CallingListMockDataSource());
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<LanguageProvider>(
-          create: (_) => LanguageProvider(
-            getLanguages: GetLanguages(languageRepo),
-            selectLanguage: SelectLanguage(languageRepo),
-            onConfirmed: (_) =>
-                navigatorKey.currentState?.pushNamed(AppRoutes.register),
-          ),
-        ),
-        ChangeNotifierProvider<RegisterProvider>(
-          create: (_) {
-            final p = RegisterProvider(registerUser: RegisterUser(registerRepo));
-            p.onRegistered = () {
-              final phone = '${p.countryCode} ${p.phone}';
-              navigatorKey.currentState
-                  ?.pushNamed(AppRoutes.otp, arguments: phone);
-            };
-            return p;
-          },
-        ),
-        ChangeNotifierProvider<OtpProvider>(
-          create: (_) => OtpProvider(
-            verifyOtp: VerifyOtp(otpRepo),
-            resendOtp: ResendOtp(otpRepo),
-          ),
-        ),
-        ChangeNotifierProvider<SignInProvider>(
-          create: (_) => SignInProvider(
-            signInUser: SignInUser(signInRepo),
-          ),
-        ),
+        ChangeNotifierProvider(create: (_) => NavProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider(
+          getLanguages: GetLanguages(langRepo), selectLanguage: SelectLanguage(langRepo),
+          onConfirmed: (_) => navigatorKey.currentState?.pushNamed(AppRoutes.register),
+        )),
+        ChangeNotifierProvider(create: (_) {
+          final p = RegisterProvider(registerUser: RegisterUser(regRepo));
+          p.onRegistered = () => navigatorKey.currentState?.pushNamed(AppRoutes.otp, arguments: '${p.countryCode} ${p.phone}');
+          return p;
+        }),
+        ChangeNotifierProvider(create: (_) => OtpProvider(verifyOtp: VerifyOtp(otpRepo), resendOtp: ResendOtp(otpRepo))),
+        ChangeNotifierProvider(create: (_) => SignInProvider(
+          signInUser: SignInUser(signInRepo),
+          onSignedIn: () => navigatorKey.currentState?.pushReplacementNamed(AppRoutes.main),
+        )),
+        ChangeNotifierProvider(create: (_) => HomeProvider(getUserProfile: GetUserProfile(homeRepo))),
+        ChangeNotifierProvider(create: (_) => DashboardProvider(getDashboardInfo: GetDashboardInfo(dashRepo), getCallStats: GetCallStats(dashRepo))),
+        ChangeNotifierProvider(create: (_) => CallingListProvider(getCallingLists: GetCallingLists(listRepo), refreshCallingLists: RefreshCallingLists(listRepo))),
+        ChangeNotifierProvider(create: (_) => DrawerProvider(getDrawerItems: const GetDrawerItems(), logoutUser: LogoutUser(signInRepo))),
       ],
       child: MaterialApp(
         title: 'Calley',

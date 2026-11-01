@@ -13,6 +13,9 @@ class _SuccessSignInRepo implements SignInRepository {
     lastRequest = request;
     return true;
   }
+
+  @override
+  Future<void> logout() async {}
 }
 
 class _FailureSignInRepo implements SignInRepository {
@@ -20,6 +23,9 @@ class _FailureSignInRepo implements SignInRepository {
   Future<bool> signIn(SignInRequest request) async {
     throw Exception('Sign in failed');
   }
+
+  @override
+  Future<void> logout() async {}
 }
 
 void main() {
