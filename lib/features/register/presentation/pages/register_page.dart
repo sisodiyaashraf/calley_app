@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/auth_card.dart';
@@ -16,8 +17,7 @@ import '../widgets/terms_checkbox.dart';
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key, this.onRegistered, this.onSignInTapped});
 
-  final VoidCallback? onRegistered;
-  final VoidCallback? onSignInTapped;
+  final VoidCallback? onRegistered, onSignInTapped;
 
   Future<void> _submit(BuildContext context) async {
     final p = context.read<RegisterProvider>();
@@ -27,13 +27,12 @@ class RegisterPage extends StatelessWidget {
       (onRegistered ?? p.onRegistered)?.call();
     } else if (p.generalError != null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(p.generalError!),
-        backgroundColor: AppColors.errorText,
+        content: Text(p.generalError!), backgroundColor: AppColors.errorText,
       ));
     }
   }
 
-  Widget _buildCard() => LayoutBuilder(
+  Widget _buildCard(BuildContext context) => LayoutBuilder(
         builder: (context, c) => SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: c.maxHeight),
@@ -43,21 +42,19 @@ class RegisterPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(AppStrings.welcome,
-                      style: AppTextStyles.cardTitle,
-                      textAlign: TextAlign.center),
+                      style: AppTextStyles.cardTitle, textAlign: TextAlign.center),
                   const SizedBox(height: AppDimens.titleSubtitleGap),
                   Text(AppStrings.registerSubtitle,
-                      style: AppTextStyles.cardSubtitle,
-                      textAlign: TextAlign.center),
+                      style: AppTextStyles.cardSubtitle, textAlign: TextAlign.center),
                   const SizedBox(height: AppDimens.subtitleToFieldsGap),
                   const RegisterForm(),
                   const SizedBox(height: AppDimens.fieldsToTermsGap),
                   const TermsCheckbox(),
                   const SizedBox(height: AppDimens.termsToSignInGap),
                   AuthLinkText(
-                    prefixText: AppStrings.signInPrompt,
-                    linkText: AppStrings.signInLink,
-                    onLinkTap: () => onSignInTapped?.call(),
+                    prefixText: AppStrings.signInPrompt, linkText: AppStrings.signInLink,
+                    onLinkTap: () => onSignInTapped != null
+                        ? onSignInTapped!() : AppRouter.toSignIn(context),
                   ),
                 ],
               ),
@@ -82,7 +79,7 @@ class RegisterPage extends StatelessWidget {
                 const SizedBox(height: AppDimens.logoTopGap),
                 const LogoHeader(),
                 const SizedBox(height: AppDimens.logoToCardGap),
-                Expanded(child: AuthCard(child: _buildCard())),
+                Expanded(child: AuthCard(child: _buildCard(context))),
                 const SizedBox(height: AppDimens.cardButtonGap),
                 PrimaryButton(
                   label: AppStrings.signUp,

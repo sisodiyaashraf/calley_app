@@ -8,11 +8,15 @@ class AuthLinkText extends StatelessWidget {
     required this.prefixText,
     required this.linkText,
     required this.onLinkTap,
+    this.style,
+    this.linkStyle,
   });
 
   final String prefixText;
   final String linkText;
   final VoidCallback onLinkTap;
+  final TextStyle? style;
+  final TextStyle? linkStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +27,13 @@ class AuthLinkText extends StatelessWidget {
         child: RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
-            style: AppTextStyles.termsText,
+            style: style ?? AppTextStyles.termsText,
             children: [
               TextSpan(text: prefixText),
-              TextSpan(text: linkText, style: AppTextStyles.termsLink),
+              TextSpan(
+                text: linkText,
+                style: linkStyle ?? AppTextStyles.termsLink,
+              ),
             ],
           ),
         ),

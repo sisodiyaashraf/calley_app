@@ -10,7 +10,7 @@ class AppTextField extends StatefulWidget {
     super.key, required this.hint, this.controller, this.initialValue,
     this.trailingIcon, this.obscureText = false, this.readOnly = false,
     this.errorText, this.keyboardType = TextInputType.text,
-    this.inputFormatters, this.onChanged,
+    this.inputFormatters, this.onChanged, this.textInputAction, this.onSubmitted,
   });
 
   final String hint;
@@ -20,7 +20,8 @@ class AppTextField extends StatefulWidget {
   final bool obscureText, readOnly;
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
-  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onChanged, onSubmitted;
+  final TextInputAction? textInputAction;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -64,44 +65,35 @@ class _AppTextFieldState extends State<AppTextField> {
       );
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          height: AppDimens.fieldHeight,
-          child: TextField(
-            controller: _ctrl,
-            obscureText: _obscured,
-            readOnly: widget.readOnly,
-            keyboardType: widget.keyboardType,
-            inputFormatters: widget.inputFormatters,
-            onChanged: widget.onChanged,
-            style: AppTextStyles.fieldText,
-            decoration: InputDecoration(
-              isDense: true,
-              hintText: widget.hint,
-              hintStyle: AppTextStyles.fieldHint,
-              contentPadding: const EdgeInsets.symmetric(
-                  horizontal: AppDimens.fieldHPadding, vertical: 14),
-              filled: true,
-              fillColor: AppColors.cardBackground,
-              border: _border(),
-              enabledBorder: _border(),
-              focusedBorder: _border(AppColors.primary),
-              suffixIcon: _buildSuffix(),
-              suffixIconConstraints: const BoxConstraints(
-                  minWidth: 44, minHeight: AppDimens.fieldHeight),
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: AppDimens.fieldHeight,
+            child: TextField(
+              controller: _ctrl, obscureText: _obscured, readOnly: widget.readOnly,
+              keyboardType: widget.keyboardType, textInputAction: widget.textInputAction,
+              onSubmitted: widget.onSubmitted, inputFormatters: widget.inputFormatters,
+              onChanged: widget.onChanged, style: AppTextStyles.fieldText,
+              decoration: InputDecoration(
+                isDense: true, hintText: widget.hint, hintStyle: AppTextStyles.fieldHint,
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: AppDimens.fieldHPadding, vertical: 14),
+                filled: true, fillColor: AppColors.cardBackground,
+                border: _border(), enabledBorder: _border(),
+                focusedBorder: _border(AppColors.primary),
+                suffixIcon: _buildSuffix(),
+                suffixIconConstraints: const BoxConstraints(
+                    minWidth: 44, minHeight: AppDimens.fieldHeight),
+              ),
             ),
           ),
-        ),
-        if (widget.errorText != null) ...[
-          const SizedBox(height: 4),
-          Text(widget.errorText!,
-              style: AppTextStyles.termsText.copyWith(color: AppColors.errorText)),
+          if (widget.errorText != null) ...[
+            const SizedBox(height: 4),
+            Text(widget.errorText!,
+                style: AppTextStyles.termsText.copyWith(color: AppColors.errorText)),
+          ],
         ],
-      ],
-    );
-  }
+      );
 }
