@@ -8,6 +8,7 @@ import '../constants/app_dimens.dart';
 class AppTextStyles {
   AppTextStyles._();
 
+  // ── Screen 1 ──────────────────────────────────────────────────────────
   static TextStyle get screenTitle => GoogleFonts.inter(
         fontSize: AppDimens.titleFontSize,
         fontWeight: FontWeight.w500,
@@ -33,5 +34,42 @@ class AppTextStyles {
         fontWeight: FontWeight.w700,
         height: 1.0,
         color: AppColors.buttonText,
+      );
+
+  // ── Screen 2 ──────────────────────────────────────────────────────────
+  static TextStyle get cardTitle => GoogleFonts.inter(
+        fontSize: AppDimens.cardTitleFontSize,
+        fontWeight: FontWeight.w600,
+        color: AppColors.titleText,
+      );
+
+  static TextStyle get cardSubtitle => GoogleFonts.inter(
+        fontSize: AppDimens.cardSubtitleFontSize,
+        fontWeight: FontWeight.w400,
+        color: AppColors.subtitleText,
+      );
+
+  static TextStyle get fieldText => GoogleFonts.inter(
+        fontSize: AppDimens.fieldFontSize,
+        fontWeight: FontWeight.w400,
+        color: AppColors.fieldText,
+      );
+
+  static TextStyle get fieldHint => GoogleFonts.inter(
+        fontSize: AppDimens.fieldFontSize,
+        fontWeight: FontWeight.w400,
+        color: AppColors.fieldHint,
+      );
+
+  static TextStyle get termsText => GoogleFonts.inter(
+        fontSize: AppDimens.cardSubtitleFontSize,
+        fontWeight: FontWeight.w400,
+        color: AppColors.subtitleText,
+      );
+
+  static TextStyle get termsLink => GoogleFonts.inter(
+        fontSize: AppDimens.cardSubtitleFontSize,
+        fontWeight: FontWeight.w400,
+        color: AppColors.primary,
       );
 }
