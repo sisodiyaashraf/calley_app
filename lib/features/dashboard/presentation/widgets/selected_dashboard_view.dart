@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../calling_lists/presentation/widgets/calling_lists_sheet.dart';
 import '../../domain/entities/call_stats.dart';
-import '../providers/dashboard_provider.dart';
 import 'call_donut_chart.dart';
 import 'selected_list_card.dart';
 import 'stats_row.dart';
@@ -15,38 +13,59 @@ class SelectedDashboardView extends StatelessWidget {
     super.key,
     required this.stats,
     required this.onStartCalling,
+    this.onListTap,
+    this.isSampleData = false,
   });
 
   final CallStats stats;
   final VoidCallback onStartCalling;
+  final VoidCallback? onListTap;
+  final bool isSampleData;
 
   @override
   Widget build(BuildContext context) {
-    final dash = context.read<DashboardProvider>();
-
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SelectedListCard(
-                  listName: stats.listName,
-                  totalCalls: stats.totalCalls,
-                  onTap: () => CallingListsSheet.show(
-                    context,
-                    onListSelected: (l) => dash.loadStats(l.id, l.name),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      children: [
+                        SelectedListCard(
+                          listName: stats.listName,
+                          totalCalls: stats.totalCalls,
+                          onTap: onListTap ?? () => CallingListsSheet.show(context),
+                        ),
+                        if (isSampleData)
+                          const Padding(
+                            padding: EdgeInsets.only(top: 6),
+                            child: Text(
+                              'Showing sample data',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF64748B),
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        const Spacer(),
+                        CallDonutChart(stats: stats),
+                        const Spacer(),
+                        StatsRow(stats: stats),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 14),
-                CallDonutChart(stats: stats),
-                const SizedBox(height: 14),
-                StatsRow(stats: stats),
-                const SizedBox(height: 16),
-              ],
-            ),
+              );
+            },
           ),
         ),
+        const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
           child: PrimaryButton(

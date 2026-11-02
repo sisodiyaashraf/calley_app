@@ -48,6 +48,9 @@ import 'package:calley_app/features/sign_in/data/repositories/sign_in_repository
 import 'package:calley_app/features/sign_in/domain/usecases/sign_in_user.dart';
 import 'package:calley_app/features/sign_in/presentation/pages/sign_in_page.dart';
 import 'package:calley_app/features/sign_in/presentation/providers/sign_in_provider.dart';
+import 'package:calley_app/features/static_screens/presentation/pages/static_screen_page.dart';
+import 'package:calley_app/features/static_screens/presentation/pages/static_screens_page.dart';
+import 'package:calley_app/features/static_screens/presentation/pages/sync_data_page.dart';
 
 class _FakeDashRepo implements DashboardRepository {
   @override
@@ -117,5 +120,20 @@ void main() {
     await tester.pump(const Duration(milliseconds: 800));
     await tester.pumpAndSettle();
     expect(find.byType(SettingsPage), findsOneWidget);
+
+    await tester.pumpWidget(_createApp(AppRoutes.allScreens));
+    await tester.pump(const Duration(milliseconds: 800));
+    await tester.pumpAndSettle();
+    expect(find.byType(StaticScreensPage), findsOneWidget);
+
+    await tester.pumpWidget(_createApp(AppRoutes.syncData));
+    await tester.pump(const Duration(milliseconds: 800));
+    await tester.pumpAndSettle();
+    expect(find.byType(SyncDataPage), findsOneWidget);
+
+    await tester.pumpWidget(_createApp(AppRoutes.staticScreen));
+    await tester.pump(const Duration(milliseconds: 800));
+    await tester.pumpAndSettle();
+    expect(find.byType(StaticScreenPage), findsOneWidget);
   });
 }

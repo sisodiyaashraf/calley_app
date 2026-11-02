@@ -25,7 +25,7 @@ class OtpPage extends StatelessWidget {
     final ok = await p.verify(phoneNumber);
     if (!context.mounted || !ok) return;
     final cb = onVerified ?? p.onVerified;
-    cb != null ? cb() : Navigator.of(context).pushReplacementNamed(AppRoutes.main);
+    cb != null ? cb() : AppRouter.toHome(context);
   }
 
   Widget _buildCard(BuildContext context) {

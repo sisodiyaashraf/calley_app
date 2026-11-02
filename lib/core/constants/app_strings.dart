@@ -48,7 +48,8 @@ class AppStrings {
   static const String startCallingNow = 'Star Calling Now';
   static const String videoTappedMessage = 'Video tutorial tapped';
   static const String whatsAppTappedMessage = 'WhatsApp support tapped';
-  static const String startCallingTappedMessage = 'Start Calling Now tapped';
+  static const String whatsappSupportNumber = '919876543210'; // Placeholder
+  static const String whatsappError = 'Could not open WhatsApp';
 
   // Dashboard & Navigation
   static const String dashboardTitle = 'Dashboard', welcomeToCalley = 'Welcome to Calley!';
@@ -79,6 +80,9 @@ class AppStrings {
   static const String pendingLabel = 'Pending', doneLabel = 'Done', scheduleLabel = 'Schedule';
 
   // Side Navigation Drawer
+  static const String drawerDashboard = 'Dashboard';
+  static const String drawerAllScreens = 'Static Screens Navigation';
+  static const String staticScreensTitle = 'Static Screens Navigation';
   static const String drawerGettingStarted = 'Getting Started', drawerSyncData = 'Sync Data';
   static const String drawerGamification = 'Gamification', drawerSendLogs = 'Send Logs';
   static const String drawerSettings = 'Settings', drawerHelp = 'Help?';

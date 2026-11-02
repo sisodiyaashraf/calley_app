@@ -50,7 +50,7 @@ class CalleyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final session = Session(), apiClient = ApiClient(http.Client());
+    final session = Session.instance, apiClient = ApiClient(http.Client());
     final langRepo = LanguageRepositoryImpl(const LanguageLocalDataSource());
     final regRepo = RegisterRepositoryImpl(const RegisterMockDataSource()), otpRepo = OtpRepositoryImpl(const OtpMockDataSource());
     final signInRepo = SignInRepositoryImpl(const SignInMockDataSource()), homeRepo = HomeRepositoryImpl(const HomeMockDataSource());
@@ -59,6 +59,7 @@ class CalleyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: Session.instance),
         ChangeNotifierProvider(create: (_) => NavProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider(
           getLanguages: GetLanguages(langRepo), selectLanguage: SelectLanguage(langRepo),
@@ -66,16 +67,14 @@ class CalleyApp extends StatelessWidget {
         )),
         ChangeNotifierProvider(create: (_) {
           final p = RegisterProvider(registerUser: RegisterUser(regRepo));
-          p.onRegistered = () => navigatorKey.currentState?.pushNamed(AppRoutes.otp, arguments: '${p.countryCode} ${p.phone}');
+          p.onRegistered = () => navigatorKey.currentState?.pushReplacementNamed(AppRoutes.otp, arguments: '${p.countryCode} ${p.phone}');
           return p;
         }),
         ChangeNotifierProvider(create: (_) => OtpProvider(
           verifyOtp: VerifyOtp(otpRepo), resendOtp: ResendOtp(otpRepo),
-          onVerified: () => navigatorKey.currentState?.pushReplacementNamed(AppRoutes.main),
+          onVerified: () => navigatorKey.currentState?.pushNamedAndRemoveUntil(AppRoutes.home, (_) => false),
         )),
-        ChangeNotifierProvider(create: (_) => SignInProvider(
-          signInUser: SignInUser(signInRepo), onSignedIn: () => navigatorKey.currentState?.pushReplacementNamed(AppRoutes.main),
-        )),
+        ChangeNotifierProvider(create: (_) => SignInProvider(signInUser: SignInUser(signInRepo))),
         ChangeNotifierProvider(create: (_) => HomeProvider(getUserProfile: GetUserProfile(homeRepo))),
         ChangeNotifierProvider(create: (_) => DashboardProvider(getDashboardInfo: GetDashboardInfo(dashRepo), getCallStats: GetCallStats(dashRepo))),
         ChangeNotifierProvider(create: (_) => CallingListProvider(getCallingLists: GetCallingLists(listRepo), refreshCallingLists: RefreshCallingLists(listRepo))),

@@ -38,7 +38,7 @@ class SelectedListCard extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppDimens.selectedListRadius),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,

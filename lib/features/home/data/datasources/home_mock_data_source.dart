@@ -7,10 +7,10 @@ class HomeMockDataSource {
   Future<UserProfile> getProfile() async {
     await Future<void>.delayed(const Duration(milliseconds: 600));
     return const UserProfile(
-      name: 'Swati',
+      name: '',
       title: 'Calley Personal',
-      email: 'swati@cstech.in',
-      phone: '9971125588',
+      email: '',
+      phone: '',
       parentAccount: 'NA',
       subscription: 'Calley Personal',
     );

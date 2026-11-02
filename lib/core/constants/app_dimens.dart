@@ -47,7 +47,7 @@ class AppDimens {
   static const double homeInfoCardRadius = 16.0, homeInfoTextFontSize = 13.0;
   static const double homeInfoTextLineHeight = 1.5, homeInfoTextToVideoGap = 12.0;
   static const double homeVideoBorderRadius = 16.0, homeVideoBorderWidth = 1.0;
-  static const double homeBottomBarBottomClearance = 18.0, homeBottomBarMargin = 12.0;
+  static const double homeBottomBarBottomClearance = 20.0, homeBottomBarMargin = 12.0;
   static const double whatsappButtonSize = 44.0, whatsappButtonRadius = 8.0;
   static const double whatsappButtonBorderWidth = 1.5, whatsappIconSize = 26.0;
   static const double whatsappToStartCallingGap = 10.0;

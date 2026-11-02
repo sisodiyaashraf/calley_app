@@ -7,7 +7,7 @@ import '../widgets/tab_placeholder_view.dart';
 import '../../features/app_drawer/presentation/widgets/app_drawer.dart';
 import '../../features/calling_lists/presentation/widgets/calling_lists_sheet.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
-import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/home/presentation/pages/first_time_home_page.dart';
 import 'nav_provider.dart';
 
 /// Main container shell housing bottom navigation and nested drawer scaffold.
@@ -33,13 +33,16 @@ class _MainShellState extends State<MainShell> {
         key: _scaffoldKey,
         backgroundColor: Colors.transparent,
         drawerScrimColor: AppColors.drawerScrim,
-        drawer: const AppDrawer(),
+        drawer: AppDrawer(onDashboardTapped: () => nav.select(2)),
         body: IndexedStack(
           index: nav.selectedIndex,
           children: [
-            HomePage(
+            FirstTimeHomePage(
               onMenuTapped: _openDrawer,
-              onStartCallingTapped: () => nav.select(2),
+              onStartCallingTapped: () {
+                nav.setShowChart(false);
+                nav.select(2);
+              },
             ),
             TabPlaceholderView(
               title: AppStrings.tabContacts,

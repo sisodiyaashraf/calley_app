@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/navigation/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/section_card.dart';
@@ -17,13 +18,11 @@ class CallingListsSheet extends StatelessWidget {
 
   final ValueChanged<CallingList>? onListSelected;
 
-  static Future<void> show(BuildContext context, {ValueChanged<CallingList>? onListSelected}) {
-    return showModalBottomSheet(
-      context: context, isScrollControlled: true,
-      backgroundColor: Colors.transparent, barrierColor: Colors.black54,
-      builder: (_) => CallingListsSheet(onListSelected: onListSelected),
-    );
-  }
+  static Future<void> show(BuildContext context, {ValueChanged<CallingList>? onListSelected}) =>
+      showModalBottomSheet(
+        context: context, isScrollControlled: true, backgroundColor: Colors.transparent, barrierColor: Colors.black54,
+        builder: (_) => CallingListsSheet(onListSelected: onListSelected),
+      );
 
   Widget _buildEmptyOrError(CallingListProvider provider) {
     if (provider.error != null) {
@@ -85,8 +84,9 @@ class CallingListsSheet extends StatelessWidget {
                     list: list,
                     onTap: () {
                       provider.select(list);
+                      try { context.read<DashboardProvider>().loadStats(list.id, list.name); } catch (_) {}
                       Navigator.of(context).pop();
-                      onListSelected?.call(list);
+                      onListSelected != null ? onListSelected!(list) : AppRouter.toDashboardChart(context);
                     },
                   )),
           ],

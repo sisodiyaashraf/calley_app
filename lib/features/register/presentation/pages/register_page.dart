@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/navigation/app_router.dart';
+import '../../../../core/session/session.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/auth_card.dart';
@@ -24,11 +25,12 @@ class RegisterPage extends StatelessWidget {
     final ok = await p.submit();
     if (!context.mounted) return;
     if (ok) {
-      (onRegistered ?? p.onRegistered)?.call();
+      Session.instance.update(newName: p.name.trim(), newEmail: p.email.trim());
+      try { context.read<Session?>()?.update(newName: p.name.trim(), newEmail: p.email.trim()); } catch (_) {}
+      final cb = onRegistered ?? p.onRegistered;
+      cb != null ? cb() : AppRouter.toOtp(context, '${p.countryCode} ${p.phone}');
     } else if (p.generalError != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(p.generalError!), backgroundColor: AppColors.errorText,
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(p.generalError!), backgroundColor: AppColors.errorText));
     }
   }
 

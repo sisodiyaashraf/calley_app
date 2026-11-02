@@ -1,6 +1,8 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/navigation/nav_provider.dart';
 import '../../domain/entities/drawer_item.dart';
 import '../../domain/usecases/get_drawer_items.dart';
 import '../../domain/usecases/logout_user.dart';
@@ -41,6 +43,23 @@ class DrawerProvider extends ChangeNotifier {
   void onItemTapped(String id) {
     lastTappedId = id;
     notifyListeners();
+  }
+
+  Future<void> syncData(BuildContext context) async {
+    final nav = Navigator.of(context);
+    final navContext = nav.context;
+    Scaffold.maybeOf(context)?.closeDrawer();
+    nav.popUntil((route) => route.isFirst);
+    try {
+      final navProvider = navContext.read<NavProvider>();
+      navProvider.setShowChart(true);
+      navProvider.select(2);
+    } catch (_) {}
+    await Future.delayed(const Duration(seconds: 1));
+    if (!navContext.mounted) return;
+    ScaffoldMessenger.of(navContext).showSnackBar(
+      const SnackBar(content: Text('Data synced'), duration: Duration(seconds: 2)),
+    );
   }
 
   Future<void> logout() => _logoutUser();

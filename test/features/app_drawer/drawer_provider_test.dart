@@ -28,6 +28,8 @@ void main() {
 
     final mainItems = provider.mainItems;
     expect(mainItems.length, 7);
+    expect(mainItems.any((i) => i.id == 'dashboard'), isFalse);
+    expect(mainItems.any((i) => i.id == 'all_screens'), isFalse);
     expect(mainItems[0].label, AppStrings.drawerGettingStarted);
     expect(mainItems[1].label, AppStrings.drawerSyncData);
     expect(mainItems[2].label, AppStrings.drawerGamification);

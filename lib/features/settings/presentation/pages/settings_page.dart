@@ -8,6 +8,7 @@ import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/section_card.dart';
 import '../../../calling_lists/presentation/widgets/calling_lists_sheet.dart';
 import '../../../home/presentation/providers/home_provider.dart';
+import '../../../static_screens/domain/entities/static_screen_data.dart';
 import '../widgets/profile_summary_card.dart';
 import '../widgets/settings_row.dart';
 
@@ -70,9 +71,7 @@ class SettingsPage extends StatelessWidget {
                           SettingsRow(
                             icon: Icons.lock_outline,
                             label: AppStrings.changePassword,
-                            onTap: onChangePasswordTapped ?? () => ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('onChangePasswordTapped'), duration: Duration(seconds: 2)),
-                                ),
+                            onTap: onChangePasswordTapped ?? () => Navigator.pushNamed(context, AppRoutes.staticScreen, arguments: StaticScreenData.changePassword),
                           ),
                           const SizedBox(height: AppDimens.settingsRowGap),
                           SettingsRow(

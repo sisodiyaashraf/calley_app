@@ -3,8 +3,8 @@ class UserProfile {
   const UserProfile({
     required this.name,
     required this.title,
-    this.email = 'swati@cstech.in',
-    this.phone = '9971125588',
+    this.email = '',
+    this.phone = '',
     this.parentAccount = 'NA',
     this.subscription = 'Calley Personal',
   });

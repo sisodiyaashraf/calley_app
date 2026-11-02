@@ -31,9 +31,8 @@ class ProfileHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = profile?.name ?? '';
-    final effectiveGreeting =
-        greeting ?? '${AppStrings.helloPrefix}$name';
+    final effectiveName = (profile?.name.isNotEmpty ?? false) ? profile!.name : 'Guest';
+    final effectiveGreeting = greeting ?? '${AppStrings.helloPrefix}$effectiveName';
     final effectiveTitle =
         title ?? profile?.title ?? AppStrings.defaultProfileTitle;
 

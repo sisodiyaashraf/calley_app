@@ -52,12 +52,14 @@ class DashboardProvider extends ChangeNotifier {
     notifyListeners();
     try {
       if (_getCallStats != null) {
-        stats = await _getCallStats(listId, _lastListName);
+        stats = await _getCallStats(listId, _lastListName).timeout(const Duration(seconds: 15));
       }
     } on AppException catch (e) {
       error = e.message;
+      stats = null;
     } catch (e) {
       error = e.toString();
+      stats = null;
     } finally {
       isLoadingStats = false;
       notifyListeners();

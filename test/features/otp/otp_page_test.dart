@@ -147,7 +147,7 @@ void main() {
     provider.dispose();
   });
 
-  testWidgets('verification with default callback pushes main route', (tester) async {
+  testWidgets('verification with default callback pushes home route', (tester) async {
     final repo = _FakeOtpRepo();
     final provider = OtpProvider(
       verifyOtp: VerifyOtp(repo),
@@ -171,6 +171,6 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text(AppStrings.verify));
     await tester.pumpAndSettle();
-    expect(pushedRoute, AppRoutes.main);
+    expect(pushedRoute, AppRoutes.home);
   });
 }

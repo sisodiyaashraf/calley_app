@@ -24,7 +24,7 @@ class StatTile extends StatelessWidget {
 
     return Container(
       height: AppDimens.statTileHeight,
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: AppDimens.statTilePadding),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(AppDimens.statTileRadius),

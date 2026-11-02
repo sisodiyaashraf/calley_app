@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:calley_app/core/constants/app_strings.dart';
+import 'package:calley_app/core/navigation/nav_provider.dart';
 import 'package:calley_app/core/theme/app_theme.dart';
 import 'package:calley_app/features/app_drawer/domain/usecases/get_drawer_items.dart';
 import 'package:calley_app/features/app_drawer/domain/usecases/logout_user.dart';
@@ -34,9 +35,11 @@ class _FakeSignInRepo implements SignInRepository {
 Widget _createDrawerTestWidget({VoidCallback? onGettingStarted, VoidCallback? onSettings, VoidCallback? onLogout}) {
   final homeP = HomeProvider(getUserProfile: GetUserProfile(_FakeHomeRepo()));
   final drawerP = DrawerProvider(getDrawerItems: const GetDrawerItems(), logoutUser: LogoutUser(_FakeSignInRepo()));
+  final navP = NavProvider();
 
   return MultiProvider(
     providers: [
+      ChangeNotifierProvider.value(value: navP),
       ChangeNotifierProvider.value(value: homeP),
       ChangeNotifierProvider.value(value: drawerP),
     ],
@@ -75,6 +78,8 @@ void main() {
     expect(find.byType(DrawerSectionTitle), findsOneWidget);
     expect(find.text(AppStrings.drawerAppInfo), findsOneWidget);
 
+    expect(find.text(AppStrings.drawerDashboard), findsNothing);
+    expect(find.text(AppStrings.drawerAllScreens), findsNothing);
     expect(find.text(AppStrings.drawerGettingStarted), findsOneWidget);
     expect(find.text(AppStrings.drawerSyncData), findsOneWidget);
     expect(find.text(AppStrings.drawerGamification), findsOneWidget);
@@ -106,5 +111,22 @@ void main() {
 
     expect(gettingStartedTapped, isTrue);
     expect(find.byType(AppDrawer), findsNothing);
+  });
+
+  testWidgets('tapping Sync Data menu item closes drawer and invokes syncData', (tester) async {
+    await tester.pumpWidget(_createDrawerTestWidget());
+    await tester.pumpAndSettle();
+
+    final scaffoldState = tester.state<ScaffoldState>(find.byType(Scaffold));
+    scaffoldState.openDrawer();
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppStrings.drawerSyncData));
+    await tester.pumpAndSettle();
+    expect(find.byType(AppDrawer), findsNothing);
+
+    // Let fake sync 1-second delay complete
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
   });
 }
