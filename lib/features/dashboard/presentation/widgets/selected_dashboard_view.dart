@@ -35,7 +35,7 @@ class SelectedDashboardView extends StatelessWidget {
                   totalCalls: stats.totalCalls,
                   onTap: () => CallingListsSheet.show(
                     context,
-                    onListSelected: (l) => dash.loadStats(l.id),
+                    onListSelected: (l) => dash.loadStats(l.id, l.name),
                   ),
                 ),
                 const SizedBox(height: 14),

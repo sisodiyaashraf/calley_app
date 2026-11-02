@@ -1,16 +1,23 @@
 import '../../domain/entities/calling_list.dart';
 import '../../domain/repositories/calling_list_repository.dart';
-import '../datasources/calling_list_mock_data_source.dart';
+import '../datasources/calling_list_remote_data_source.dart';
 
-/// Concrete repository implementation for Calling Lists.
+/// Concrete repository implementation backed by [CallingListRemoteDataSource].
 class CallingListRepositoryImpl implements CallingListRepository {
-  const CallingListRepositoryImpl(this._dataSource);
+  CallingListRepositoryImpl(this._remoteDataSource);
 
-  final CallingListMockDataSource _dataSource;
+  final CallingListRemoteDataSource _remoteDataSource;
+  List<CallingList> _cachedLists = const [];
+
+  List<CallingList> get cachedLists => _cachedLists;
 
   @override
-  Future<List<CallingList>> getLists() => _dataSource.fetchCallingLists();
+  Future<List<CallingList>> getLists() async {
+    final models = await _remoteDataSource.fetchCallingLists();
+    _cachedLists = models.map((m) => m.toEntity()).toList();
+    return _cachedLists;
+  }
 
   @override
-  Future<List<CallingList>> refresh() => _dataSource.refreshCallingLists();
+  Future<List<CallingList>> refresh() => getLists();
 }

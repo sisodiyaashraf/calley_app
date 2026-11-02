@@ -35,7 +35,7 @@ void main() {
     await provider.load();
 
     expect(provider.lists.length, 1);
-    expect(provider.selected, isNull);
+    expect(provider.selected?.name, AppStrings.testList);
 
     provider.select(provider.lists.first);
     expect(provider.selected?.name, AppStrings.testList);

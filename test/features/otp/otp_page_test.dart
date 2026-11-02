@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:calley_app/core/constants/app_strings.dart';
+import 'package:calley_app/core/navigation/app_router.dart';
 import 'package:calley_app/core/theme/app_theme.dart';
 import 'package:calley_app/core/widgets/auth_link_text.dart';
 import 'package:calley_app/core/widgets/primary_button.dart';
@@ -144,5 +145,32 @@ void main() {
     expect(provider.resendCountdown, lessThanOrEqualTo(30));
 
     provider.dispose();
+  });
+
+  testWidgets('verification with default callback pushes main route', (tester) async {
+    final repo = _FakeOtpRepo();
+    final provider = OtpProvider(
+      verifyOtp: VerifyOtp(repo),
+      resendOtp: ResendOtp(repo),
+    );
+    String? pushedRoute;
+    await tester.pumpWidget(
+      ChangeNotifierProvider<OtpProvider>.value(
+        value: provider,
+        child: MaterialApp(
+          theme: AppTheme.light,
+          onGenerateRoute: (settings) {
+            pushedRoute = settings.name;
+            return MaterialPageRoute(builder: (_) => const Scaffold(), settings: settings);
+          },
+          home: const OtpPage(phoneNumber: '+91 9876543210'),
+        ),
+      ),
+    );
+    provider.setCode('123456');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(AppStrings.verify));
+    await tester.pumpAndSettle();
+    expect(pushedRoute, AppRoutes.main);
   });
 }

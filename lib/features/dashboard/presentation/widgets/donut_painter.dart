@@ -37,7 +37,14 @@ class DonutPainter extends CustomPainter {
     ];
 
     final sum = segments.fold<int>(0, (prev, s) => prev + s.$1);
-    if (sum == 0) return;
+    if (sum == 0) {
+      final greyPaint = Paint()
+        ..color = AppColors.cardBorder
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = ringThickness;
+      canvas.drawCircle(center, radius, greyPaint);
+      return;
+    }
 
     final activeCount = segments.where((s) => s.$1 > 0).length;
     final gapRad = activeCount > 1 ? (5.0 * pi / 180.0) : 0.0;

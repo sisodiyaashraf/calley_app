@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:calley_app/core/constants/app_strings.dart';
 import 'package:calley_app/core/navigation/app_router.dart';
 import 'package:calley_app/core/navigation/main_shell.dart';
 import 'package:calley_app/core/navigation/nav_provider.dart';
@@ -8,13 +9,14 @@ import 'package:calley_app/core/theme/app_theme.dart';
 import 'package:calley_app/features/app_drawer/domain/usecases/get_drawer_items.dart';
 import 'package:calley_app/features/app_drawer/domain/usecases/logout_user.dart';
 import 'package:calley_app/features/app_drawer/presentation/providers/drawer_provider.dart';
-import 'package:calley_app/features/calling_lists/data/datasources/calling_list_mock_data_source.dart';
-import 'package:calley_app/features/calling_lists/data/repositories/calling_list_repository_impl.dart';
+import 'package:calley_app/features/calling_lists/domain/entities/calling_list.dart';
+import 'package:calley_app/features/calling_lists/domain/repositories/calling_list_repository.dart';
 import 'package:calley_app/features/calling_lists/domain/usecases/get_calling_lists.dart';
 import 'package:calley_app/features/calling_lists/domain/usecases/refresh_calling_lists.dart';
 import 'package:calley_app/features/calling_lists/presentation/providers/calling_list_provider.dart';
-import 'package:calley_app/features/dashboard/data/datasources/dashboard_mock_data_source.dart';
-import 'package:calley_app/features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'package:calley_app/features/dashboard/domain/entities/call_stats.dart';
+import 'package:calley_app/features/dashboard/domain/entities/dashboard_info.dart';
+import 'package:calley_app/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:calley_app/features/dashboard/domain/usecases/get_call_stats.dart';
 import 'package:calley_app/features/dashboard/domain/usecases/get_dashboard_info.dart';
 import 'package:calley_app/features/dashboard/presentation/providers/dashboard_provider.dart';
@@ -47,14 +49,26 @@ import 'package:calley_app/features/sign_in/domain/usecases/sign_in_user.dart';
 import 'package:calley_app/features/sign_in/presentation/pages/sign_in_page.dart';
 import 'package:calley_app/features/sign_in/presentation/providers/sign_in_provider.dart';
 
+class _FakeDashRepo implements DashboardRepository {
+  @override
+  Future<DashboardInfo> getDashboardInfo() async => const DashboardInfo(cardTitle: AppStrings.loadNumberToCall, message: '', link: '');
+  @override
+  Future<CallStats> getStats(String listId, [String? listName]) async => const CallStats(listName: AppStrings.testList, totalCalls: 0, pending: 0, done: 0, scheduled: 0);
+}
+
+class _FakeListRepo implements CallingListRepository {
+  @override
+  Future<List<CallingList>> getLists() async => const [];
+  @override
+  Future<List<CallingList>> refresh() async => const [];
+}
+
 Widget _createApp(String initialRoute) {
   final lRepo = LanguageRepositoryImpl(const LanguageLocalDataSource());
   final rRepo = RegisterRepositoryImpl(const RegisterMockDataSource());
   final oRepo = OtpRepositoryImpl(const OtpMockDataSource());
   final sRepo = SignInRepositoryImpl(const SignInMockDataSource());
   final hRepo = HomeRepositoryImpl(const HomeMockDataSource());
-  final dRepo = DashboardRepositoryImpl(const DashboardMockDataSource());
-  final cRepo = CallingListRepositoryImpl(const CallingListMockDataSource());
 
   return MultiProvider(
     providers: [
@@ -64,53 +78,41 @@ Widget _createApp(String initialRoute) {
       ChangeNotifierProvider(create: (_) => OtpProvider(verifyOtp: VerifyOtp(oRepo), resendOtp: ResendOtp(oRepo))),
       ChangeNotifierProvider(create: (_) => SignInProvider(signInUser: SignInUser(sRepo))),
       ChangeNotifierProvider(create: (_) => HomeProvider(getUserProfile: GetUserProfile(hRepo))),
-      ChangeNotifierProvider(create: (_) => DashboardProvider(getDashboardInfo: GetDashboardInfo(dRepo), getCallStats: GetCallStats(dRepo))),
-      ChangeNotifierProvider(create: (_) => CallingListProvider(getCallingLists: GetCallingLists(cRepo), refreshCallingLists: RefreshCallingLists(cRepo))),
+      ChangeNotifierProvider(create: (_) => DashboardProvider(getDashboardInfo: GetDashboardInfo(_FakeDashRepo()), getCallStats: GetCallStats(_FakeDashRepo()))),
+      ChangeNotifierProvider(create: (_) => CallingListProvider(getCallingLists: GetCallingLists(_FakeListRepo()), refreshCallingLists: RefreshCallingLists(_FakeListRepo()))),
       ChangeNotifierProvider(create: (_) => DrawerProvider(getDrawerItems: const GetDrawerItems(), logoutUser: LogoutUser(sRepo))),
     ],
-    child: MaterialApp(theme: AppTheme.light, initialRoute: initialRoute, onGenerateRoute: AppRouter.onGenerateRoute),
+    child: MaterialApp(key: ValueKey(initialRoute), theme: AppTheme.light, initialRoute: initialRoute, onGenerateRoute: AppRouter.onGenerateRoute),
   );
 }
 
 void main() {
-  testWidgets('router routes to ChooseLanguagePage for /', (tester) async {
+  testWidgets('router routes to all configured routes', (tester) async {
     await tester.pumpWidget(_createApp(AppRoutes.language));
     await tester.pumpAndSettle();
     expect(find.byType(ChooseLanguagePage), findsOneWidget);
-  });
 
-  testWidgets('router routes to RegisterPage for /register', (tester) async {
     await tester.pumpWidget(_createApp(AppRoutes.register));
     await tester.pumpAndSettle();
     expect(find.byType(RegisterPage), findsOneWidget);
-  });
 
-  testWidgets('router routes to OtpPage for /otp', (tester) async {
     await tester.pumpWidget(_createApp(AppRoutes.otp));
     await tester.pumpAndSettle();
     expect(find.byType(OtpPage), findsOneWidget);
-  });
 
-  testWidgets('router routes to SignInPage for /sign-in', (tester) async {
     await tester.pumpWidget(_createApp(AppRoutes.signIn));
     await tester.pumpAndSettle();
     expect(find.byType(SignInPage), findsOneWidget);
-  });
 
-  testWidgets('router routes to HomePage for /home', (tester) async {
     await tester.pumpWidget(_createApp(AppRoutes.home));
     await tester.pumpAndSettle();
     expect(find.byType(HomePage), findsOneWidget);
-  });
 
-  testWidgets('router routes to MainShell for /main', (tester) async {
     await tester.pumpWidget(_createApp(AppRoutes.main));
     await tester.pump(const Duration(milliseconds: 800));
     await tester.pumpAndSettle();
     expect(find.byType(MainShell), findsOneWidget);
-  });
 
-  testWidgets('router routes to SettingsPage for /settings', (tester) async {
     await tester.pumpWidget(_createApp(AppRoutes.settings));
     await tester.pump(const Duration(milliseconds: 800));
     await tester.pumpAndSettle();

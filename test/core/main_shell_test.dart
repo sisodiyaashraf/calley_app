@@ -25,6 +25,7 @@ import 'package:calley_app/features/dashboard/presentation/providers/dashboard_p
 import 'package:calley_app/features/home/domain/entities/user_profile.dart';
 import 'package:calley_app/features/home/domain/repositories/home_repository.dart';
 import 'package:calley_app/features/home/domain/usecases/get_user_profile.dart';
+import 'package:calley_app/features/home/presentation/pages/home_page.dart';
 import 'package:calley_app/features/home/presentation/providers/home_provider.dart';
 import 'package:calley_app/features/sign_in/domain/entities/sign_in_request.dart';
 import 'package:calley_app/features/sign_in/domain/repositories/sign_in_repository.dart';
@@ -38,7 +39,7 @@ class _FakeDashboardRepo implements DashboardRepository {
   @override
   Future<DashboardInfo> getDashboardInfo() async => const DashboardInfo(cardTitle: AppStrings.loadNumberToCall, message: AppStrings.loadNumberMessage, link: AppStrings.loadNumberUrl);
   @override
-  Future<CallStats> getStats(String listId) async => const CallStats(listName: AppStrings.testList, totalCalls: 50, pending: 28, done: 22, scheduled: 9);
+  Future<CallStats> getStats(String listId, [String? listName]) async => const CallStats(listName: AppStrings.testList, totalCalls: 50, pending: 28, done: 22, scheduled: 9);
 }
 
 class _FakeCallingListRepo implements CallingListRepository {
@@ -93,7 +94,7 @@ void main() {
     expect(find.byType(AppBottomNavBar), findsOneWidget);
   });
 
-  testWidgets('tapping tab switches placeholder', (tester) async {
+  testWidgets('tapping tab switches placeholder and tapping start calling switches to dashboard', (tester) async {
     final navP = NavProvider();
     final homeP = HomeProvider(getUserProfile: GetUserProfile(_FakeHomeRepo()));
     await tester.pumpWidget(_createShellApp(homeP: homeP, navP: navP));
@@ -101,5 +102,10 @@ void main() {
     await tester.tap(find.byType(BottomNavItem).first);
     await tester.pumpAndSettle();
     expect(navP.selectedIndex, 0);
+    expect(find.byType(HomePage), findsOneWidget);
+
+    await tester.tap(find.text(AppStrings.startCallingNow).first);
+    await tester.pumpAndSettle();
+    expect(navP.selectedIndex, 2);
   });
 }

@@ -1,19 +1,35 @@
+import '../../../../core/constants/app_strings.dart';
 import '../../domain/entities/call_stats.dart';
 import '../../domain/entities/dashboard_info.dart';
 import '../../domain/repositories/dashboard_repository.dart';
-import '../datasources/dashboard_mock_data_source.dart';
+import '../datasources/dashboard_remote_data_source.dart';
 
-/// Concrete repository implementation for Dashboard data and statistics.
+/// Concrete repository implementation backed by [DashboardRemoteDataSource].
 class DashboardRepositoryImpl implements DashboardRepository {
-  const DashboardRepositoryImpl(this._dataSource);
+  DashboardRepositoryImpl(this._remoteDataSource, {String? defaultListName})
+      : _defaultListName = defaultListName ?? AppStrings.testList;
 
-  final DashboardMockDataSource _dataSource;
-
-  @override
-  Future<DashboardInfo> getDashboardInfo() =>
-      _dataSource.fetchDashboardInfo();
+  final DashboardRemoteDataSource _remoteDataSource;
+  final String _defaultListName;
 
   @override
-  Future<CallStats> getStats(String listId) =>
-      _dataSource.fetchCallStats(listId);
+  Future<DashboardInfo> getDashboardInfo() async {
+    return const DashboardInfo(
+      cardTitle: AppStrings.loadNumberToCall,
+      message: AppStrings.loadNumberMessage,
+      link: AppStrings.loadNumberUrl,
+    );
+  }
+
+  @override
+  Future<CallStats> getStats(String listId, [String? listName]) async {
+    final details = await _remoteDataSource.fetchListDetails(listId);
+    return CallStats(
+      listName: listName ?? _defaultListName,
+      totalCalls: details.callsCount,
+      pending: details.pending,
+      done: details.called,
+      scheduled: details.rescheduled,
+    );
+  }
 }

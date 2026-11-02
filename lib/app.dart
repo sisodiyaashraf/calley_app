@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'core/navigation/app_router.dart';
 import 'core/navigation/nav_provider.dart';
+import 'core/network/api_client.dart';
+import 'core/session/session.dart';
 import 'core/theme/app_theme.dart';
 import 'features/app_drawer/domain/usecases/get_drawer_items.dart';
 import 'features/app_drawer/domain/usecases/logout_user.dart';
 import 'features/app_drawer/presentation/providers/drawer_provider.dart';
-import 'features/calling_lists/data/datasources/calling_list_mock_data_source.dart';
+import 'features/calling_lists/data/datasources/calling_list_remote_data_source.dart';
 import 'features/calling_lists/data/repositories/calling_list_repository_impl.dart';
 import 'features/calling_lists/domain/usecases/get_calling_lists.dart';
 import 'features/calling_lists/domain/usecases/refresh_calling_lists.dart';
 import 'features/calling_lists/presentation/providers/calling_list_provider.dart';
-import 'features/dashboard/data/datasources/dashboard_mock_data_source.dart';
+import 'features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import 'features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'features/dashboard/domain/usecases/get_call_stats.dart';
 import 'features/dashboard/domain/usecases/get_dashboard_info.dart';
@@ -47,13 +50,12 @@ class CalleyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final session = Session(), apiClient = ApiClient(http.Client());
     final langRepo = LanguageRepositoryImpl(const LanguageLocalDataSource());
-    final regRepo = RegisterRepositoryImpl(const RegisterMockDataSource());
-    final otpRepo = OtpRepositoryImpl(const OtpMockDataSource());
-    final signInRepo = SignInRepositoryImpl(const SignInMockDataSource());
-    final homeRepo = HomeRepositoryImpl(const HomeMockDataSource());
-    final dashRepo = DashboardRepositoryImpl(const DashboardMockDataSource());
-    final listRepo = CallingListRepositoryImpl(const CallingListMockDataSource());
+    final regRepo = RegisterRepositoryImpl(const RegisterMockDataSource()), otpRepo = OtpRepositoryImpl(const OtpMockDataSource());
+    final signInRepo = SignInRepositoryImpl(const SignInMockDataSource()), homeRepo = HomeRepositoryImpl(const HomeMockDataSource());
+    final dashRepo = DashboardRepositoryImpl(DashboardRemoteDataSource(apiClient: apiClient, session: session));
+    final listRepo = CallingListRepositoryImpl(CallingListRemoteDataSource(apiClient: apiClient, session: session));
 
     return MultiProvider(
       providers: [
@@ -67,10 +69,12 @@ class CalleyApp extends StatelessWidget {
           p.onRegistered = () => navigatorKey.currentState?.pushNamed(AppRoutes.otp, arguments: '${p.countryCode} ${p.phone}');
           return p;
         }),
-        ChangeNotifierProvider(create: (_) => OtpProvider(verifyOtp: VerifyOtp(otpRepo), resendOtp: ResendOtp(otpRepo))),
+        ChangeNotifierProvider(create: (_) => OtpProvider(
+          verifyOtp: VerifyOtp(otpRepo), resendOtp: ResendOtp(otpRepo),
+          onVerified: () => navigatorKey.currentState?.pushReplacementNamed(AppRoutes.main),
+        )),
         ChangeNotifierProvider(create: (_) => SignInProvider(
-          signInUser: SignInUser(signInRepo),
-          onSignedIn: () => navigatorKey.currentState?.pushReplacementNamed(AppRoutes.main),
+          signInUser: SignInUser(signInRepo), onSignedIn: () => navigatorKey.currentState?.pushReplacementNamed(AppRoutes.main),
         )),
         ChangeNotifierProvider(create: (_) => HomeProvider(getUserProfile: GetUserProfile(homeRepo))),
         ChangeNotifierProvider(create: (_) => DashboardProvider(getDashboardInfo: GetDashboardInfo(dashRepo), getCallStats: GetCallStats(dashRepo))),
@@ -78,12 +82,8 @@ class CalleyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DrawerProvider(getDrawerItems: const GetDrawerItems(), logoutUser: LogoutUser(signInRepo))),
       ],
       child: MaterialApp(
-        title: 'Calley',
-        navigatorKey: navigatorKey,
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        initialRoute: AppRoutes.language,
-        onGenerateRoute: AppRouter.onGenerateRoute,
+        title: 'Calley', navigatorKey: navigatorKey, debugShowCheckedModeBanner: false,
+        theme: AppTheme.light, initialRoute: AppRoutes.language, onGenerateRoute: AppRouter.onGenerateRoute,
       ),
     );
   }

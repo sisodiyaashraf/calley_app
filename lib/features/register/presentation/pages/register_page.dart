@@ -41,11 +41,9 @@ class RegisterPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(AppStrings.welcome,
-                      style: AppTextStyles.cardTitle, textAlign: TextAlign.center),
+                  Text(AppStrings.welcome, style: AppTextStyles.cardTitle, textAlign: TextAlign.center),
                   const SizedBox(height: AppDimens.titleSubtitleGap),
-                  Text(AppStrings.registerSubtitle,
-                      style: AppTextStyles.cardSubtitle, textAlign: TextAlign.center),
+                  Text(AppStrings.registerSubtitle, style: AppTextStyles.cardSubtitle, textAlign: TextAlign.center),
                   const SizedBox(height: AppDimens.subtitleToFieldsGap),
                   const RegisterForm(),
                   const SizedBox(height: AppDimens.fieldsToTermsGap),
@@ -53,8 +51,7 @@ class RegisterPage extends StatelessWidget {
                   const SizedBox(height: AppDimens.termsToSignInGap),
                   AuthLinkText(
                     prefixText: AppStrings.signInPrompt, linkText: AppStrings.signInLink,
-                    onLinkTap: () => onSignInTapped != null
-                        ? onSignInTapped!() : AppRouter.toSignIn(context),
+                    onLinkTap: () => onSignInTapped != null ? onSignInTapped!() : AppRouter.toSignIn(context),
                   ),
                 ],
               ),
@@ -72,23 +69,25 @@ class RegisterPage extends StatelessWidget {
         resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppDimens.horizontalMargin),
-            child: Column(
-              children: [
-                const SizedBox(height: AppDimens.logoTopGap),
-                const LogoHeader(),
-                const SizedBox(height: AppDimens.logoToCardGap),
-                Expanded(child: AuthCard(child: _buildCard(context))),
-                const SizedBox(height: AppDimens.cardButtonGap),
-                PrimaryButton(
-                  label: AppStrings.signUp,
-                  isLoading: context.watch<RegisterProvider>().isLoading,
-                  onPressed: () => _submit(context),
+            padding: const EdgeInsets.symmetric(horizontal: AppDimens.horizontalMargin),
+            child: Column(children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: AppColors.dashboardText),
+                  onPressed: () => Navigator.maybePop(context),
                 ),
-                const SizedBox(height: AppDimens.buttonBottomMinClearance),
-              ],
-            ),
+              ),
+              const LogoHeader(),
+              const SizedBox(height: 12),
+              Expanded(child: AuthCard(child: _buildCard(context))),
+              const SizedBox(height: AppDimens.cardButtonGap),
+              PrimaryButton(
+                label: AppStrings.signUp, isLoading: context.watch<RegisterProvider>().isLoading,
+                onPressed: () => _submit(context),
+              ),
+              const SizedBox(height: AppDimens.buttonBottomMinClearance),
+            ]),
           ),
         ),
       ),

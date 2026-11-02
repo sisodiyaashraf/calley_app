@@ -25,56 +25,60 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: AppDimens.dashboardAppBarHeight,
-      color: Colors.transparent,
-      padding: const EdgeInsets.only(
-        left: AppDimens.dashboardCardMargin,
-        right: AppDimens.dashboardActionRightMargin,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                InkWell(
-                  onTap: onMenuTapped,
-                  child: const Icon(
-                    Icons.menu,
-                    size: AppDimens.dashboardMenuIconSize,
-                    color: AppColors.dashboardText,
+    return SafeArea(
+      top: true,
+      bottom: false,
+      child: Container(
+        height: AppDimens.dashboardAppBarHeight,
+        color: Colors.transparent,
+        padding: const EdgeInsets.only(
+          left: AppDimens.dashboardCardMargin,
+          right: AppDimens.dashboardActionRightMargin,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: onMenuTapped,
+                    child: const Icon(
+                      Icons.menu,
+                      size: AppDimens.dashboardMenuIconSize,
+                      color: AppColors.dashboardText,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: Text(
-                    title,
-                    style: AppTextStyles.dashboardAppBarTitle,
-                    overflow: TextOverflow.ellipsis,
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: AppTextStyles.dashboardAppBarTitle,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          InkWell(
-            onTap: onSupportTapped,
-            child: const Icon(
-              Icons.headset_mic_outlined,
-              size: AppDimens.dashboardActionIconSize,
-              color: AppColors.dashboardText,
+            InkWell(
+              onTap: onSupportTapped,
+              child: const Icon(
+                Icons.headset_mic_outlined,
+                size: AppDimens.dashboardActionIconSize,
+                color: AppColors.dashboardText,
+              ),
             ),
-          ),
-          const SizedBox(width: AppDimens.dashboardActionGap),
-          InkWell(
-            onTap: onNotificationsTapped,
-            child: const Icon(
-              Icons.notifications_none,
-              size: AppDimens.dashboardActionIconSize,
-              color: AppColors.dashboardText,
+            const SizedBox(width: AppDimens.dashboardActionGap),
+            InkWell(
+              onTap: onNotificationsTapped,
+              child: const Icon(
+                Icons.notifications_none,
+                size: AppDimens.dashboardActionIconSize,
+                color: AppColors.dashboardText,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

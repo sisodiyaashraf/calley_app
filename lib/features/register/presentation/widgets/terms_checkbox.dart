@@ -23,13 +23,7 @@ class _TermsCheckboxState extends State<TermsCheckbox> {
   void initState() {
     super.initState();
     _linkRecognizer = TapGestureRecognizer()
-      ..onTap = () {
-        if (widget.onTermsTap != null) {
-          widget.onTermsTap!();
-        } else {
-          context.read<RegisterProvider>().toggleTerms();
-        }
-      };
+      ..onTap = () => widget.onTermsTap != null ? widget.onTermsTap!() : context.read<RegisterProvider>().toggleTerms();
   }
 
   @override
@@ -41,23 +35,16 @@ class _TermsCheckboxState extends State<TermsCheckbox> {
   Widget _box(RegisterProvider p) => GestureDetector(
         onTap: p.toggleTerms,
         child: Container(
-          width: AppDimens.checkboxSize,
-          height: AppDimens.checkboxSize,
+          width: AppDimens.checkboxSize, height: AppDimens.checkboxSize,
           decoration: BoxDecoration(
-            color: p.agreedToTerms
-                ? AppColors.checkboxChecked
-                : AppColors.cardBackground,
+            color: p.agreedToTerms ? AppColors.checkboxChecked : AppColors.cardBackground,
             borderRadius: BorderRadius.circular(AppDimens.checkboxRadius),
             border: Border.all(
-              color: p.agreedToTerms
-                  ? AppColors.checkboxChecked
-                  : AppColors.checkboxBorder,
+              color: p.agreedToTerms ? AppColors.checkboxChecked : AppColors.checkboxBorder,
               width: AppDimens.checkboxBorderWidth,
             ),
           ),
-          child: p.agreedToTerms
-              ? const Icon(Icons.check, size: 12, color: AppColors.buttonText)
-              : null,
+          child: p.agreedToTerms ? const Icon(Icons.check, size: 12, color: AppColors.buttonText) : null,
         ),
       );
 
@@ -77,15 +64,8 @@ class _TermsCheckboxState extends State<TermsCheckbox> {
                 text: TextSpan(
                   style: AppTextStyles.termsText,
                   children: [
-                    TextSpan(
-                      text: AppStrings.termsPrefix,
-                      recognizer: TapGestureRecognizer()..onTap = p.toggleTerms,
-                    ),
-                    TextSpan(
-                      text: AppStrings.termsLink,
-                      style: AppTextStyles.termsLink,
-                      recognizer: _linkRecognizer,
-                    ),
+                    TextSpan(text: AppStrings.termsPrefix, recognizer: TapGestureRecognizer()..onTap = p.toggleTerms),
+                    TextSpan(text: AppStrings.termsLink, style: AppTextStyles.termsLink, recognizer: _linkRecognizer),
                   ],
                 ),
               ),
@@ -94,9 +74,7 @@ class _TermsCheckboxState extends State<TermsCheckbox> {
         ),
         if (p.termsError != null) ...[
           const SizedBox(height: 4),
-          Text(p.termsError!,
-              style:
-                  AppTextStyles.termsText.copyWith(color: AppColors.errorText)),
+          Text(p.termsError!, style: AppTextStyles.termsText.copyWith(color: AppColors.errorText)),
         ],
       ],
     );

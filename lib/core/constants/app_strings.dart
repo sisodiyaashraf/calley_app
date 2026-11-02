@@ -33,6 +33,7 @@ class AppStrings {
   static const String resendOtpIn = 'Resend OTP in ', verify = 'Verify';
   static const String errInvalidOtp = 'Invalid OTP code. Please try again.';
   static const String otpResentSuccess = 'OTP code resent successfully.';
+  static const String wrongNumberPrompt = 'Wrong number? ', changeNumberLink = 'Change Number';
 
   // Screen 4 – Sign In
   static const String welcomeSignIn = 'Welcome', signInSubtitle = 'Please sign-in to continue';
@@ -87,5 +88,5 @@ class AppStrings {
   static const String drawerShareApp = 'Share App', drawerLogout = 'Logout';
   static const String drawerShareText = 'Check out Calley Automatic Call Dialer: https://www.getcalley.com';
   static const String logoutConfirmTitle = 'Logout', logoutConfirmMessage = 'Are you sure you want to logout?';
-  static const String cancel = 'Cancel';
+  static const String cancel = 'Cancel', retry = 'Retry';
 }

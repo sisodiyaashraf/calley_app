@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/validators.dart';
 import '../../domain/entities/register_request.dart';
@@ -13,22 +12,14 @@ class RegisterProvider extends ChangeNotifier {
   final RegisterUser _registerUser;
   VoidCallback? onRegistered;
 
-  // Field values
-  String name = '';
-  String email = '';
-  String password = '';
-  String countryCode = '+91';
-  String phone = '';
-  bool agreedToTerms = false;
-  bool isLoading = false;
-
-  // Error messages (null = valid)
-  String? nameError;
-  String? emailError;
-  String? passwordError;
-  String? phoneError;
-  String? termsError;
-  String? generalError;
+  String name = '', email = '', password = '', countryCode = '+91', phone = '';
+  bool agreedToTerms = false, isLoading = false;
+  String? nameError,
+      emailError,
+      passwordError,
+      phoneError,
+      termsError,
+      generalError;
 
   void setName(String v) {
     name = v;
@@ -60,7 +51,6 @@ class RegisterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Validates all fields; returns true when valid.
   bool validate() {
     nameError = Validators.name(name);
     emailError = Validators.email(email);
@@ -75,7 +65,6 @@ class RegisterProvider extends ChangeNotifier {
         termsError == null;
   }
 
-  /// Validates and, if valid, calls the use-case then fires [onRegistered].
   Future<bool> submit() async {
     if (!validate()) return false;
     isLoading = true;

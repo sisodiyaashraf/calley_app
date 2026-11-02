@@ -13,7 +13,6 @@ class OtpProvider extends ChangeNotifier {
   final VerifyOtp _verifyOtp;
   final ResendOtp _resendOtp;
   VoidCallback? onVerified;
-
   List<String> digits = List.filled(6, '');
   String? error;
   bool isLoading = false;
@@ -23,7 +22,6 @@ class OtpProvider extends ChangeNotifier {
   bool get isComplete => digits.length == 6 && digits.every((d) => d.trim().isNotEmpty);
   bool get canResend => resendCountdown == 0 && !isLoading;
   String get code => digits.join();
-
   String get resendLabel => resendCountdown == 0
       ? AppStrings.resendOtp
       : '${AppStrings.resendOtpIn}0:${resendCountdown.toString().padLeft(2, '0')}';
@@ -50,10 +48,7 @@ class OtpProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final ok = await _verifyOtp(OtpVerification(phone: phone, code: code));
-      if (ok) {
-        onVerified?.call();
-        return true;
-      }
+      if (ok) { onVerified?.call(); return true; }
       error = AppStrings.errInvalidOtp;
       return false;
     } catch (_) {
@@ -72,10 +67,7 @@ class OtpProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final ok = await _resendOtp(phone);
-      if (ok) {
-        clearDigits();
-        _startCountdown();
-      }
+      if (ok) { clearDigits(); _startCountdown(); }
       return ok;
     } catch (_) {
       error = AppStrings.errGeneric;
@@ -89,13 +81,8 @@ class OtpProvider extends ChangeNotifier {
   void _startCountdown() {
     _timer?.cancel();
     resendCountdown = 30;
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (resendCountdown > 1) {
-        resendCountdown--;
-      } else {
-        resendCountdown = 0;
-        timer.cancel();
-      }
+    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (resendCountdown > 1) { resendCountdown--; } else { resendCountdown = 0; t.cancel(); }
       notifyListeners();
     });
   }

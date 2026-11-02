@@ -7,5 +7,6 @@ class GetCallStats {
 
   final DashboardRepository _repository;
 
-  Future<CallStats> call(String listId) => _repository.getStats(listId);
+  Future<CallStats> call(String listId, [String? listName]) =>
+      _repository.getStats(listId, listName);
 }

@@ -33,7 +33,7 @@ class _FakeDashboardRepo implements DashboardRepository {
   @override
   Future<DashboardInfo> getDashboardInfo() async => const DashboardInfo(cardTitle: AppStrings.loadNumberToCall, message: AppStrings.loadNumberMessage, link: AppStrings.loadNumberUrl);
   @override
-  Future<CallStats> getStats(String listId) async => const CallStats(listName: AppStrings.testList, totalCalls: 50, pending: 28, done: 22, scheduled: 9);
+  Future<CallStats> getStats(String listId, [String? listName]) async => const CallStats(listName: AppStrings.testList, totalCalls: 50, pending: 28, done: 22, scheduled: 9);
 }
 
 class _FakeCallingListRepo implements CallingListRepository {
@@ -93,5 +93,20 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.byType(DashboardAppBar), findsOneWidget);
+  });
+
+  testWidgets('app bar icons are positioned safely below status bar notch', (tester) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.padding = const FakeViewPadding(top: 44, bottom: 34);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPadding);
+
+    await tester.pumpWidget(_createTestWidget());
+    await tester.pumpAndSettle();
+
+    final menuIcon = tester.getTopLeft(find.byIcon(Icons.menu));
+    expect(menuIcon.dy, greaterThanOrEqualTo(44.0));
   });
 }

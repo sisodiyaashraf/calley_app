@@ -14,9 +14,7 @@ import '../widgets/sign_in_form.dart';
 
 /// Screen 4 – "Sign In" (composes widgets only).
 class SignInPage extends StatelessWidget {
-  const SignInPage({
-    super.key, this.onSignedIn, this.onForgotPasswordTapped, this.onSignUpTapped,
-  });
+  const SignInPage({super.key, this.onSignedIn, this.onForgotPasswordTapped, this.onSignUpTapped});
 
   final VoidCallback? onSignedIn, onForgotPasswordTapped, onSignUpTapped;
 
@@ -28,15 +26,13 @@ class SignInPage extends StatelessWidget {
       final cb = onSignedIn ?? p.onSignedIn;
       cb != null ? cb() : AppRouter.toMain(context);
     } else if (p.generalError != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(p.generalError!), backgroundColor: AppColors.errorText));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(p.generalError!), backgroundColor: AppColors.errorText));
     }
   }
 
   void _handleForgot(BuildContext context) => onForgotPasswordTapped != null
       ? onForgotPasswordTapped!()
-      : ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(AppStrings.forgotPasswordInfo)));
+      : ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(AppStrings.forgotPasswordInfo)));
 
   Widget _buildCard(BuildContext context) => LayoutBuilder(
         builder: (context, c) => SingleChildScrollView(
@@ -47,22 +43,16 @@ class SignInPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(AppStrings.welcomeSignIn,
-                      style: AppTextStyles.signInTitle, textAlign: TextAlign.center),
+                  Text(AppStrings.welcomeSignIn, style: AppTextStyles.signInTitle, textAlign: TextAlign.center),
                   const SizedBox(height: AppDimens.signInTitleSubtitleGap),
-                  Text(AppStrings.signInSubtitle,
-                      style: AppTextStyles.signInSubtitle, textAlign: TextAlign.center),
+                  Text(AppStrings.signInSubtitle, style: AppTextStyles.signInSubtitle, textAlign: TextAlign.center),
                   const SizedBox(height: AppDimens.subtitleToFieldsGap),
-                  SignInForm(
-                    onForgotPassword: () => _handleForgot(context),
-                    onSubmit: () => _submit(context),
-                  ),
+                  SignInForm(onForgotPassword: () => _handleForgot(context), onSubmit: () => _submit(context)),
                   const SizedBox(height: AppDimens.signInToSignUpGap),
                   AuthLinkText(
                     prefixText: AppStrings.signUpPrompt, linkText: AppStrings.signUp,
                     style: AppTextStyles.authPrompt, linkStyle: AppTextStyles.authPromptLink,
-                    onLinkTap: () => onSignUpTapped != null
-                        ? onSignUpTapped!() : AppRouter.toRegisterFromSignIn(context),
+                    onLinkTap: () => onSignUpTapped != null ? onSignUpTapped!() : AppRouter.toRegisterFromSignIn(context),
                   ),
                 ],
               ),
@@ -83,16 +73,18 @@ class SignInPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppDimens.horizontalMargin),
             child: Column(children: [
-              const SizedBox(height: AppDimens.logoTopGap),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: AppColors.dashboardText),
+                  onPressed: () => Navigator.maybePop(context),
+                ),
+              ),
               const LogoHeader(),
-              const SizedBox(height: AppDimens.logoToCardGap),
+              const SizedBox(height: 12),
               Expanded(child: AuthCard(child: _buildCard(context))),
               const SizedBox(height: AppDimens.cardButtonGap),
-              PrimaryButton(
-                label: AppStrings.signInButton,
-                isLoading: p.isLoading,
-                onPressed: () => _submit(context),
-              ),
+              PrimaryButton(label: AppStrings.signInButton, isLoading: p.isLoading, onPressed: () => _submit(context)),
               const SizedBox(height: AppDimens.buttonBottomMinClearance),
             ]),
           ),

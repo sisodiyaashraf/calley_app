@@ -16,7 +16,7 @@ class _FakeDashboardRepo implements DashboardRepository {
       );
 
   @override
-  Future<CallStats> getStats(String listId) async => const CallStats(
+  Future<CallStats> getStats(String listId, [String? listName]) async => const CallStats(
         listName: AppStrings.testList,
         totalCalls: 50,
         pending: 28,

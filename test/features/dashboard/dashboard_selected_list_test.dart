@@ -35,7 +35,7 @@ class _FakeDashboardRepo implements DashboardRepository {
   @override
   Future<DashboardInfo> getDashboardInfo() async => const DashboardInfo(cardTitle: AppStrings.loadNumberToCall, message: AppStrings.loadNumberMessage, link: AppStrings.loadNumberUrl);
   @override
-  Future<CallStats> getStats(String listId) async => const CallStats(listName: AppStrings.testList, totalCalls: 50, pending: 28, done: 22, scheduled: 9);
+  Future<CallStats> getStats(String listId, [String? listName]) async => const CallStats(listName: AppStrings.testList, totalCalls: 50, pending: 28, done: 22, scheduled: 9);
 }
 
 class _FakeCallingListRepo implements CallingListRepository {

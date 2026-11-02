@@ -31,8 +31,7 @@ class _AppTextFieldState extends State<AppTextField> {
   late bool _obscured;
   TextEditingController? _internal;
 
-  TextEditingController get _ctrl => widget.controller ??
-      (_internal ??= TextEditingController(text: widget.initialValue));
+  TextEditingController get _ctrl => widget.controller ?? (_internal ??= TextEditingController(text: widget.initialValue));
 
   @override
   void initState() {
@@ -51,15 +50,11 @@ class _AppTextFieldState extends State<AppTextField> {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => setState(() => _obscured = !_obscured),
-      child: Icon(
-        _obscured ? Icons.lock_outline : Icons.lock_open_outlined,
-        size: AppDimens.fieldIconSize, color: AppColors.fieldIcon,
-      ),
+      child: Icon(_obscured ? Icons.lock_outline : Icons.lock_open_outlined, size: AppDimens.fieldIconSize, color: AppColors.fieldIcon),
     );
   }
 
-  OutlineInputBorder _border([Color c = AppColors.fieldBorder]) =>
-      OutlineInputBorder(
+  OutlineInputBorder _border([Color c = AppColors.fieldBorder]) => OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppDimens.fieldBorderRadius),
         borderSide: BorderSide(color: c, width: AppDimens.fieldBorderWidth),
       );
@@ -78,21 +73,17 @@ class _AppTextFieldState extends State<AppTextField> {
               onChanged: widget.onChanged, style: AppTextStyles.fieldText,
               decoration: InputDecoration(
                 isDense: true, hintText: widget.hint, hintStyle: AppTextStyles.fieldHint,
-                contentPadding: const EdgeInsets.symmetric(
-                    horizontal: AppDimens.fieldHPadding, vertical: 14),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppDimens.fieldHPadding, vertical: 14),
                 filled: true, fillColor: AppColors.cardBackground,
-                border: _border(), enabledBorder: _border(),
-                focusedBorder: _border(AppColors.primary),
+                border: _border(), enabledBorder: _border(), focusedBorder: _border(AppColors.primary),
                 suffixIcon: _buildSuffix(),
-                suffixIconConstraints: const BoxConstraints(
-                    minWidth: 44, minHeight: AppDimens.fieldHeight),
+                suffixIconConstraints: const BoxConstraints(minWidth: 44, minHeight: AppDimens.fieldHeight),
               ),
             ),
           ),
           if (widget.errorText != null) ...[
             const SizedBox(height: 4),
-            Text(widget.errorText!,
-                style: AppTextStyles.termsText.copyWith(color: AppColors.errorText)),
+            Text(widget.errorText!, style: AppTextStyles.termsText.copyWith(color: AppColors.errorText)),
           ],
         ],
       );

@@ -112,4 +112,21 @@ void main() {
     expect(find.byType(ProfileHeaderCard), findsOneWidget);
     expect(find.byType(PrimaryButton), findsOneWidget);
   });
+
+  testWidgets('home app bar icons are positioned safely below status bar notch', (tester) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.padding = const FakeViewPadding(top: 44, bottom: 34);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPadding);
+
+    final provider = HomeProvider(getUserProfile: GetUserProfile(_FakeHomeRepo()));
+
+    await tester.pumpWidget(createTestableHomeWidget(provider: provider));
+    await tester.pumpAndSettle();
+
+    final menuIcon = tester.getTopLeft(find.byIcon(Icons.menu));
+    expect(menuIcon.dy, greaterThanOrEqualTo(44.0));
+  });
 }

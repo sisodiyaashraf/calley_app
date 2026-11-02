@@ -13,6 +13,13 @@ import 'package:calley_app/features/calling_lists/presentation/widgets/calling_l
 import 'package:calley_app/features/calling_lists/presentation/widgets/calling_lists_sheet.dart';
 import 'package:calley_app/features/calling_lists/presentation/widgets/refresh_button.dart';
 
+import 'package:calley_app/features/dashboard/domain/entities/call_stats.dart';
+import 'package:calley_app/features/dashboard/domain/entities/dashboard_info.dart';
+import 'package:calley_app/features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'package:calley_app/features/dashboard/domain/usecases/get_call_stats.dart';
+import 'package:calley_app/features/dashboard/domain/usecases/get_dashboard_info.dart';
+import 'package:calley_app/features/dashboard/presentation/providers/dashboard_provider.dart';
+
 class _FakeRepo implements CallingListRepository {
   _FakeRepo({this.initial = const [CallingList(id: '1', name: AppStrings.testList, totalCalls: 50)]});
   final List<CallingList> initial;
@@ -22,9 +29,20 @@ class _FakeRepo implements CallingListRepository {
   Future<List<CallingList>> refresh() async => initial;
 }
 
+class _FakeDashRepo implements DashboardRepository {
+  @override
+  Future<DashboardInfo> getDashboardInfo() async => const DashboardInfo(cardTitle: '', message: '', link: '');
+  @override
+  Future<CallStats> getStats(String listId, [String? listName]) async => const CallStats(listName: '', totalCalls: 0, pending: 0, done: 0, scheduled: 0);
+}
+
 Widget _wrapSheet({required CallingListProvider provider, ValueChanged<CallingList>? onSelected}) {
-  return ChangeNotifierProvider<CallingListProvider>.value(
-    value: provider,
+  final dashP = DashboardProvider(getDashboardInfo: GetDashboardInfo(_FakeDashRepo()), getCallStats: GetCallStats(_FakeDashRepo()));
+  return MultiProvider(
+    providers: [
+      ChangeNotifierProvider<CallingListProvider>.value(value: provider),
+      ChangeNotifierProvider<DashboardProvider>.value(value: dashP),
+    ],
     child: MaterialApp(
       theme: AppTheme.light,
       home: Scaffold(
