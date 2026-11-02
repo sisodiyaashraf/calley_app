@@ -30,28 +30,30 @@ class OtpPage extends StatelessWidget {
 
   Widget _buildCard(BuildContext context) {
     final p = context.watch<OtpProvider>();
-    return SingleChildScrollView(
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        const OtpHeaderText(),
-        const SizedBox(height: AppDimens.otpDescToInputGap),
-        OtpInputRow(code: p.code, hasError: p.error != null, onChanged: p.setCode),
-        if (p.error != null) ...[
-          const SizedBox(height: 8),
-          Text(p.error!, style: AppTextStyles.termsText.copyWith(color: AppColors.errorText), textAlign: TextAlign.center),
-        ],
-        const SizedBox(height: AppDimens.otpInputToPhoneGap),
-        Text(phoneNumber, style: AppTextStyles.otpPhone, textAlign: TextAlign.center),
-        const SizedBox(height: AppDimens.otpPhoneToResendGap),
-        ResendRow(phoneNumber: phoneNumber),
-        const SizedBox(height: 12),
-        InkWell(
-          onTap: () => Navigator.maybePop(context),
-          child: Text.rich(TextSpan(style: AppTextStyles.termsText, children: [
-            const TextSpan(text: AppStrings.wrongNumberPrompt),
-            TextSpan(text: AppStrings.changeNumberLink, style: AppTextStyles.termsLink),
-          ]), textAlign: TextAlign.center),
-        ),
-      ]),
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          const OtpHeaderText(),
+          const SizedBox(height: 20),
+          OtpInputRow(code: p.code, hasError: p.error != null, onChanged: p.setCode),
+          if (p.error != null) ...[
+            const SizedBox(height: 6),
+            Text(p.error!, style: AppTextStyles.termsText.copyWith(color: AppColors.errorText), textAlign: TextAlign.center),
+          ],
+          const SizedBox(height: 16),
+          Text(phoneNumber, style: AppTextStyles.otpPhone, textAlign: TextAlign.center),
+          const SizedBox(height: 18),
+          ResendRow(phoneNumber: phoneNumber),
+          const SizedBox(height: 10),
+          InkWell(
+            onTap: () => Navigator.maybePop(context),
+            child: Text.rich(TextSpan(style: AppTextStyles.termsText, children: [
+              const TextSpan(text: AppStrings.wrongNumberPrompt),
+              TextSpan(text: AppStrings.changeNumberLink, style: AppTextStyles.termsLink),
+            ]), textAlign: TextAlign.center),
+          ),
+        ]),
+      ),
     );
   }
 
@@ -67,17 +69,14 @@ class OtpPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppDimens.horizontalMargin),
             child: Column(children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: AppColors.dashboardText),
-                  onPressed: () => Navigator.maybePop(context),
-                ),
-              ),
+              Align(alignment: Alignment.centerLeft, child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: AppColors.dashboardText),
+                onPressed: () => Navigator.maybePop(context),
+              )),
               const LogoHeader(),
-              const SizedBox(height: 12),
-              Expanded(child: AuthCard(padding: const EdgeInsets.all(AppDimens.otpCardPadding), child: _buildCard(context))),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
+              Expanded(child: AuthCard(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14), child: _buildCard(context))),
+              const SizedBox(height: 10),
               PrimaryButton(label: AppStrings.verify, isLoading: p.isLoading, onPressed: p.isComplete ? () => _handleVerify(context) : null),
               const SizedBox(height: 8),
               InkWell(
@@ -87,7 +86,7 @@ class OtpPage extends StatelessWidget {
                   TextSpan(text: AppStrings.signInLink, style: AppTextStyles.authPromptLink),
                 ]), textAlign: TextAlign.center),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
             ]),
           ),
         ),

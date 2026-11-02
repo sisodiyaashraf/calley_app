@@ -4,6 +4,7 @@ import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/dashboard_static_data.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/dashboard_app_bar.dart';
+import '../../../app_drawer/presentation/widgets/app_drawer.dart';
 import '../../../calling_lists/presentation/widgets/calling_lists_sheet.dart';
 import '../providers/dashboard_provider.dart';
 import '../widgets/selected_dashboard_view.dart';
@@ -40,8 +41,10 @@ class DashboardChartPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
+      drawerScrimColor: AppColors.drawerScrim,
+      drawer: const AppDrawer(),
       appBar: DashboardAppBar(
-        onMenuTapped: onMenuTapped ?? () => Scaffold.of(context).openDrawer(),
+        onMenuTapped: onMenuTapped,
         onSupportTapped: onSupportTapped ?? () => _toast(context, AppStrings.actionSupport),
         onNotificationsTapped: onNotificationsTapped ?? () => _toast(context, AppStrings.actionNotifications),
       ),

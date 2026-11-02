@@ -13,12 +13,15 @@ class OtpBox extends StatelessWidget {
     required this.onChanged,
     this.hasError = false,
     this.isLast = false,
+    this.size,
+    this.gap,
   });
 
   final TextEditingController controller;
   final FocusNode focusNode;
   final ValueChanged<String> onChanged;
   final bool hasError, isLast;
+  final double? size, gap;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +32,12 @@ class OtpBox extends StatelessWidget {
     final width = focused
         ? AppDimens.otpBoxFocusedBorderWidth
         : AppDimens.otpBoxBorderWidth;
+    final boxSize = size ?? AppDimens.otpBoxSize;
 
     return Container(
-      width: AppDimens.otpBoxSize,
-      height: AppDimens.otpBoxSize,
-      margin: EdgeInsets.only(right: isLast ? 0 : AppDimens.otpBoxGap),
+      width: boxSize,
+      height: boxSize,
+      margin: EdgeInsets.only(right: isLast ? 0 : (gap ?? AppDimens.otpBoxGap)),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(AppDimens.otpBoxRadius),

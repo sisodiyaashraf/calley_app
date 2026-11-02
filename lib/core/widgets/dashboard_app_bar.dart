@@ -42,7 +42,7 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: onMenuTapped,
+                    onTap: onMenuTapped ?? () => Scaffold.maybeOf(context)?.openDrawer(),
                     child: const Icon(
                       Icons.menu,
                       size: AppDimens.dashboardMenuIconSize,

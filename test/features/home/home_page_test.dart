@@ -6,6 +6,7 @@ import 'package:calley_app/core/theme/app_theme.dart';
 import 'package:calley_app/core/widgets/primary_button.dart';
 import 'package:calley_app/core/widgets/profile_header_card.dart';
 import 'package:calley_app/core/widgets/whatsapp_action_button.dart';
+import 'package:calley_app/features/app_drawer/presentation/widgets/app_drawer.dart';
 import 'package:calley_app/features/home/domain/entities/user_profile.dart';
 import 'package:calley_app/features/home/domain/repositories/home_repository.dart';
 import 'package:calley_app/features/home/domain/usecases/get_user_profile.dart';
@@ -128,5 +129,18 @@ void main() {
 
     final menuIcon = tester.getTopLeft(find.byIcon(Icons.menu));
     expect(menuIcon.dy, greaterThanOrEqualTo(44.0));
+  });
+
+  testWidgets('tapping menu icon opens drawer without Scaffold.of exception', (tester) async {
+    final provider = HomeProvider(getUserProfile: GetUserProfile(_FakeHomeRepo()));
+
+    await tester.pumpWidget(createTestableHomeWidget(provider: provider));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.byType(AppDrawer), findsOneWidget);
   });
 }

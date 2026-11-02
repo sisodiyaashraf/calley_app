@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../constants/app_dimens.dart';
 import 'otp_box.dart';
 
 /// Reusable row of single-digit boxes with auto-advance and paste support.
@@ -28,11 +29,9 @@ class _OtpInputRowState extends State<OtpInputRow> {
   void initState() {
     super.initState();
     _ctrls = List.generate(widget.length, (_) => TextEditingController());
-    _nodes = List.generate(widget.length, (i) => FocusNode());
-    for (int i = 0; i < widget.length; i++) {
-      final idx = i;
-      _nodes[idx].addListener(() => setState(() {}));
-      _nodes[idx].onKeyEvent = (_, evt) {
+    _nodes = List.generate(widget.length, (idx) => FocusNode()
+      ..addListener(() => setState(() {}))
+      ..onKeyEvent = (_, evt) {
         if (evt is KeyDownEvent && evt.logicalKey == LogicalKeyboardKey.backspace && _ctrls[idx].text.isEmpty && idx > 0) {
           _nodes[idx - 1].requestFocus();
           _ctrls[idx - 1].clear();
@@ -40,8 +39,7 @@ class _OtpInputRowState extends State<OtpInputRow> {
           return KeyEventResult.handled;
         }
         return KeyEventResult.ignored;
-      };
-    }
+      });
     _syncCode(widget.code);
     if (widget.autoFocus && _nodes.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) => mounted ? _nodes.first.requestFocus() : null);
@@ -83,14 +81,18 @@ class _OtpInputRowState extends State<OtpInputRow> {
   }
 
   @override
-  Widget build(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          widget.length,
-          (i) => OtpBox(
+  Widget build(BuildContext context) => LayoutBuilder(builder: (_, c) {
+        final maxW = c.maxWidth.isFinite ? c.maxWidth : 360.0;
+        final n = widget.length;
+        final gap = maxW < 280 ? 4.0 : (maxW < 320 ? 6.0 : (maxW < 350 ? 8.0 : AppDimens.otpBoxGap));
+        final size = ((maxW - (n - 1) * gap) / n).floorToDouble().clamp(30.0, AppDimens.otpBoxSize);
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(n, (i) => OtpBox(
             controller: _ctrls[i], focusNode: _nodes[i], hasError: widget.hasError,
-            isLast: i == widget.length - 1, onChanged: (val) => _handleChanged(i, val),
-          ),
-        ),
-      );
+            isLast: i == n - 1, size: size, gap: gap, onChanged: (val) => _handleChanged(i, val),
+          )),
+        );
+      });
 }

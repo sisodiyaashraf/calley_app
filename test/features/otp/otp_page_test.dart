@@ -40,6 +40,45 @@ Widget createTestableOtpWidget({
 }
 
 void main() {
+  testWidgets('renders all OTP page elements without overflow on 360x640 frame', (tester) async {
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final repo = _FakeOtpRepo();
+    final provider = OtpProvider(
+      verifyOtp: VerifyOtp(repo),
+      resendOtp: ResendOtp(repo),
+    );
+
+    await tester.pumpWidget(createTestableOtpWidget(provider: provider));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('renders without overflow on 368x729 base frame and 320x568 small frame', (tester) async {
+    tester.view.physicalSize = const Size(368, 729);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final repo = _FakeOtpRepo();
+    final provider = OtpProvider(
+      verifyOtp: VerifyOtp(repo),
+      resendOtp: ResendOtp(repo),
+    );
+
+    await tester.pumpWidget(createTestableOtpWidget(provider: provider));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    tester.view.physicalSize = const Size(320, 568);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('renders all OTP page elements without overflow', (tester) async {
     tester.view.physicalSize = const Size(414, 896);
     tester.view.devicePixelRatio = 1.0;

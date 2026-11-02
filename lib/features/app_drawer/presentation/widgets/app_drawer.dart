@@ -31,13 +31,9 @@ class AppDrawer extends StatelessWidget {
 
   Future<void> _handleTap(BuildContext context, DrawerItem item) async {
     if (!item.isTappable) return;
-    final drawer = context.read<DrawerProvider>();
-    drawer.onItemTapped(item.id);
-
-    if (item.id == 'sync_data') {
-      drawer.syncData(context);
-      return;
-    }
+    DrawerProvider? drawer;
+    try { drawer = context.read<DrawerProvider>(); drawer.onItemTapped(item.id); } catch (_) {}
+    if (item.id == 'sync_data') return drawer != null ? drawer.syncData(context) : Navigator.of(context).pop();
     Navigator.of(context).pop();
 
     switch (item.id) {
@@ -49,7 +45,7 @@ class AppDrawer extends StatelessWidget {
         if (confirmed == true && context.mounted) {
           Session.instance.clear();
           try { context.read<Session?>()?.clear(); } catch (_) {}
-          await drawer.logout();
+          if (drawer != null) await drawer.logout();
           if (context.mounted) AppRouter.toLanguage(context);
         }
         break;
@@ -65,8 +61,11 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final home = context.watch<HomeProvider>();
-    final drawer = context.watch<DrawerProvider>();
+    HomeProvider? home; DrawerProvider? drawer;
+    try { home = context.watch<HomeProvider>(); } catch (_) {}
+    try { drawer = context.watch<DrawerProvider>(); } catch (_) {}
+    final main = drawer?.mainItems ?? const <DrawerItem>[];
+    final info = drawer?.appInfoItems ?? const <DrawerItem>[];
 
     return Drawer(
       width: MediaQuery.of(context).size.width * AppDimens.drawerWidthFactor,
@@ -76,17 +75,17 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          DrawerHeaderCard(profile: home.profile),
+          DrawerHeaderCard(profile: home?.profile),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ...drawer.mainItems.map((item) => DrawerMenuItem(item: item, onTap: () => _handleTap(context, item))),
+                  ...main.map((item) => DrawerMenuItem(item: item, onTap: () => _handleTap(context, item))),
                   const Divider(height: 1, thickness: 1, color: AppColors.drawerDivider),
                   const DrawerSectionTitle(title: AppStrings.drawerAppInfo),
-                  ...drawer.appInfoItems.map((item) => DrawerMenuItem(item: item, onTap: () => _handleTap(context, item))),
+                  ...info.map((item) => DrawerMenuItem(item: item, onTap: () => _handleTap(context, item))),
                 ],
               ),
             ),

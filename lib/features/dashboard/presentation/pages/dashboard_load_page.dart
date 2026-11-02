@@ -9,6 +9,7 @@ import '../../../../core/utils/url_helper.dart';
 import '../../../../core/widgets/dashboard_app_bar.dart';
 import '../../../../core/widgets/profile_header_card.dart';
 import '../../../../core/widgets/start_calling_bar.dart';
+import '../../../app_drawer/presentation/widgets/app_drawer.dart';
 import '../../../calling_lists/presentation/widgets/calling_lists_sheet.dart';
 import '../../../home/presentation/providers/home_provider.dart';
 import '../widgets/load_number_card.dart';
@@ -42,8 +43,10 @@ class DashboardLoadPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
+      drawerScrimColor: AppColors.drawerScrim,
+      drawer: const AppDrawer(),
       appBar: DashboardAppBar(
-        onMenuTapped: onMenuTapped ?? () => Scaffold.of(context).openDrawer(),
+        onMenuTapped: onMenuTapped,
         onSupportTapped: onSupportTapped ?? () => _toast(context, AppStrings.actionSupport),
         onNotificationsTapped: onNotificationsTapped ?? () => _toast(context, AppStrings.actionNotifications),
       ),

@@ -9,6 +9,7 @@ import '../../../../core/utils/url_helper.dart';
 import '../../../../core/widgets/dashboard_app_bar.dart';
 import '../../../../core/widgets/profile_header_card.dart';
 import '../../../../core/widgets/start_calling_bar.dart';
+import '../../../app_drawer/presentation/widgets/app_drawer.dart';
 import '../providers/home_provider.dart';
 import '../widgets/first_time_info_card.dart';
 
@@ -44,9 +45,11 @@ class FirstTimeHomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.pageBackground,
+      drawerScrimColor: AppColors.drawerScrim,
+      drawer: const AppDrawer(),
       appBar: DashboardAppBar(
         title: AppStrings.tabHome,
-        onMenuTapped: onMenuTapped ?? () => Scaffold.of(context).openDrawer(),
+        onMenuTapped: onMenuTapped,
         onSupportTapped:
             onSupportTapped ?? () => _toast(context, AppStrings.actionSupport),
         onNotificationsTapped:
