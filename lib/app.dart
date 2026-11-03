@@ -44,8 +44,9 @@ import 'features/sign_in/presentation/providers/sign_in_provider.dart';
 
 /// Root of the widget tree with dependency graph composition.
 class CalleyApp extends StatelessWidget {
-  const CalleyApp({super.key});
+  const CalleyApp({super.key, this.initialRoute = AppRoutes.language});
 
+  final String initialRoute;
   static final navigatorKey = GlobalKey<NavigatorState>();
 
   @override
@@ -70,10 +71,7 @@ class CalleyApp extends StatelessWidget {
           p.onRegistered = () => navigatorKey.currentState?.pushReplacementNamed(AppRoutes.otp, arguments: '${p.countryCode} ${p.phone}');
           return p;
         }),
-        ChangeNotifierProvider(create: (_) => OtpProvider(
-          verifyOtp: VerifyOtp(otpRepo), resendOtp: ResendOtp(otpRepo),
-          onVerified: () => navigatorKey.currentState?.pushNamedAndRemoveUntil(AppRoutes.home, (_) => false),
-        )),
+        ChangeNotifierProvider(create: (_) => OtpProvider(verifyOtp: VerifyOtp(otpRepo), resendOtp: ResendOtp(otpRepo))),
         ChangeNotifierProvider(create: (_) => SignInProvider(signInUser: SignInUser(signInRepo))),
         ChangeNotifierProvider(create: (_) => HomeProvider(getUserProfile: GetUserProfile(homeRepo))),
         ChangeNotifierProvider(create: (_) => DashboardProvider(getDashboardInfo: GetDashboardInfo(dashRepo), getCallStats: GetCallStats(dashRepo))),
@@ -82,7 +80,7 @@ class CalleyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Calley', navigatorKey: navigatorKey, debugShowCheckedModeBanner: false,
-        theme: AppTheme.light, initialRoute: AppRoutes.language, onGenerateRoute: AppRouter.onGenerateRoute,
+        theme: AppTheme.light, initialRoute: initialRoute, onGenerateRoute: AppRouter.onGenerateRoute,
       ),
     );
   }

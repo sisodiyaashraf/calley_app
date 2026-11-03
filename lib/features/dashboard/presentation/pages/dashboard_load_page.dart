@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/navigation/app_router.dart';
 import '../../../../core/session/session.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -47,7 +48,7 @@ class DashboardLoadPage extends StatelessWidget {
       drawer: const AppDrawer(),
       appBar: DashboardAppBar(
         onMenuTapped: onMenuTapped,
-        onSupportTapped: onSupportTapped ?? () => _toast(context, AppStrings.actionSupport),
+        onSupportTapped: onSupportTapped ?? () => AppRouter.toStaticChart(context),
         onNotificationsTapped: onNotificationsTapped ?? () => _toast(context, AppStrings.actionNotifications),
       ),
       body: SafeArea(

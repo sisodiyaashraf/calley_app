@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../features/dashboard/presentation/pages/dashboard_chart_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_load_page.dart';
+import '../../features/dashboard/presentation/pages/static_chart_page.dart';
 import '../../features/home/presentation/pages/first_time_home_page.dart';
 import '../../features/language/presentation/pages/choose_language_page.dart';
 import '../../features/otp/presentation/pages/otp_page.dart';
@@ -28,6 +29,7 @@ class AppRoutes {
   static const String dashboard = '/dashboard';
   static const String dashboardLoad = '/dashboard-load';
   static const String dashboardChart = '/dashboard-chart';
+  static const String staticChart = '/static-chart';
   static const String settings = '/settings';
   static const String syncData = '/sync-data';
   static const String staticScreen = '/static-screen';
@@ -51,6 +53,7 @@ class AppRouter {
       case AppRoutes.dashboard: return MaterialPageRoute(builder: (_) => const MainShell(), settings: settings);
       case AppRoutes.dashboardLoad: return MaterialPageRoute(builder: (_) => const DashboardLoadPage(), settings: settings);
       case AppRoutes.dashboardChart: return MaterialPageRoute(builder: (_) => const DashboardChartPage(), settings: settings);
+      case AppRoutes.staticChart: return MaterialPageRoute(builder: (_) => const StaticChartPage(), settings: settings);
       case AppRoutes.settings: return MaterialPageRoute(builder: (_) => const SettingsPage(), settings: settings);
       case AppRoutes.syncData: return MaterialPageRoute(builder: (_) => const SyncDataPage(), settings: settings);
       case AppRoutes.staticScreen:
@@ -68,6 +71,7 @@ class AppRouter {
   static void toLanguage(BuildContext context) => Navigator.pushNamedAndRemoveUntil(context, AppRoutes.language, (_) => false);
   static void toMain(BuildContext context) => Navigator.pushReplacementNamed(context, AppRoutes.main);
   static void toSettings(BuildContext context) => Navigator.pushNamed(context, AppRoutes.settings);
+  static void toStaticChart(BuildContext context) => Navigator.pushNamed(context, AppRoutes.staticChart);
 
   static void toDashboardLoad(BuildContext context) {
     try {

@@ -5,6 +5,7 @@ import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/navigation/app_router.dart';
 import '../../../../core/session/session.dart';
+import '../../../../core/session/session_storage.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../home/presentation/providers/home_provider.dart';
 import '../../../static_screens/domain/entities/static_screen_data.dart';
@@ -34,7 +35,7 @@ class AppDrawer extends StatelessWidget {
     DrawerProvider? drawer;
     try { drawer = context.read<DrawerProvider>(); drawer.onItemTapped(item.id); } catch (_) {}
     if (item.id == 'sync_data') return drawer != null ? drawer.syncData(context) : Navigator.of(context).pop();
-    Navigator.of(context).pop();
+    if (item.id != 'logout') Navigator.of(context).pop();
 
     switch (item.id) {
       case 'settings': onSettingsTapped != null ? onSettingsTapped!() : AppRouter.toSettings(context); break;
@@ -43,8 +44,8 @@ class AppDrawer extends StatelessWidget {
         if (onLogoutTapped != null) return onLogoutTapped!();
         final confirmed = await LogoutConfirmDialog.show(context);
         if (confirmed == true && context.mounted) {
-          Session.instance.clear();
           try { context.read<Session?>()?.clear(); } catch (_) {}
+          Session.instance.clear(); await SessionStorage.clear();
           if (drawer != null) await drawer.logout();
           if (context.mounted) AppRouter.toLanguage(context);
         }

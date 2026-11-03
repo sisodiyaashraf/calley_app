@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/navigation/app_router.dart';
+import '../../../../core/session/session.dart';
+import '../../../../core/session/session_storage.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/auth_card.dart';
@@ -24,6 +26,14 @@ class OtpPage extends StatelessWidget {
     final p = context.read<OtpProvider>();
     final ok = await p.verify(phoneNumber);
     if (!context.mounted || !ok) return;
+    Session? session;
+    try { session = context.read<Session?>(); } catch (_) {}
+    final name = (session?.name.isNotEmpty ?? false) ? session!.name : Session.instance.name;
+    final email = (session?.email.isNotEmpty ?? false) ? session!.email : Session.instance.email;
+    session?.update(newName: name, newEmail: email);
+    Session.instance.update(newName: name, newEmail: email);
+    await SessionStorage.save(name, email);
+    if (!context.mounted) return;
     final cb = onVerified ?? p.onVerified;
     cb != null ? cb() : AppRouter.toHome(context);
   }
@@ -69,23 +79,14 @@ class OtpPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppDimens.horizontalMargin),
             child: Column(children: [
-              Align(alignment: Alignment.centerLeft, child: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: AppColors.dashboardText),
-                onPressed: () => Navigator.maybePop(context),
-              )),
+              Align(alignment: Alignment.centerLeft, child: IconButton(icon: const Icon(Icons.arrow_back_ios_new, size: 20, color: AppColors.dashboardText), onPressed: () => Navigator.maybePop(context))),
               const LogoHeader(),
               const SizedBox(height: 8),
               Expanded(child: AuthCard(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14), child: _buildCard(context))),
               const SizedBox(height: 10),
               PrimaryButton(label: AppStrings.verify, isLoading: p.isLoading, onPressed: p.isComplete ? () => _handleVerify(context) : null),
               const SizedBox(height: 8),
-              InkWell(
-                onTap: () => Navigator.pushReplacementNamed(context, AppRoutes.signIn),
-                child: Text.rich(TextSpan(style: AppTextStyles.authPrompt, children: [
-                  const TextSpan(text: AppStrings.signInPrompt),
-                  TextSpan(text: AppStrings.signInLink, style: AppTextStyles.authPromptLink),
-                ]), textAlign: TextAlign.center),
-              ),
+              InkWell(onTap: () => Navigator.pushReplacementNamed(context, AppRoutes.signIn), child: Text.rich(TextSpan(style: AppTextStyles.authPrompt, children: [const TextSpan(text: AppStrings.signInPrompt), TextSpan(text: AppStrings.signInLink, style: AppTextStyles.authPromptLink)]), textAlign: TextAlign.center)),
               const SizedBox(height: 10),
             ]),
           ),

@@ -18,6 +18,16 @@ class Session extends ChangeNotifier {
   String get email => _email;
   String get name => _name;
 
+  set name(String val) {
+    _name = val;
+    notifyListeners();
+  }
+
+  set email(String val) {
+    _email = val;
+    notifyListeners();
+  }
+
   bool get isEmpty => _name.trim().isEmpty;
   String get displayName => _name.trim().isEmpty ? 'Guest' : _name.trim();
 
