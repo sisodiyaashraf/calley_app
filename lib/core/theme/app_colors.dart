@@ -33,11 +33,11 @@ class AppColors {
   static const Color bottomNavBackground = Color(0xFFEFF6FF), bottomNavInactive = Color(0xFF0F172A);
 
   // Donut Chart & Stat Tiles
-  static const Color donutDone = Color(0xFF1D7CF2), donutScheduled = Color(0xFF9B6CF2);
-  static const Color donutPending = Color(0xFFFFAE3D), donutHole = Color(0xFFF1F1F1);
-  static const Color statPendingBg = Color(0xFFFFEFD9), statPendingBar = Color(0xFFF59E0B);
-  static const Color statDoneBg = Color(0xFFDCFCE7), statDoneBar = Color(0xFF16A34A);
-  static const Color statScheduleBg = Color(0xFFEEE8FF), statScheduleBar = Color(0xFF4F46E5);
+  static const Color donutDone = Color(0xFF1F74EC), donutScheduled = Color(0xFF9566F2);
+  static const Color donutPending = Color(0xFFFAAB3C), donutHole = Color(0xFFF4F5F7);
+  static const Color statPendingBg = Color(0xFFFEF0DB), statPendingBar = Color(0xFFFAAB3C);
+  static const Color statDoneBg = Color(0xFFDDFCE0), statDoneBar = Color(0xFF0EB01D);
+  static const Color statScheduleBg = Color(0xFFF3EEFE), statScheduleBar = Color(0xFF4E1BD9);
 
   // Side Navigation Drawer
   static const Color drawerBackground = Color(0xFFEFF6FF);

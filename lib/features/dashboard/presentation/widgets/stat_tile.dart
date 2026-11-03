@@ -24,7 +24,7 @@ class StatTile extends StatelessWidget {
 
     return Container(
       height: AppDimens.statTileHeight,
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: AppDimens.statTilePadding),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: AppDimens.statTilePadding),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(AppDimens.statTileRadius),
@@ -52,13 +52,26 @@ class StatTile extends StatelessWidget {
                   style: AppTextStyles.statTileLabel,
                   overflow: TextOverflow.ellipsis,
                 ),
-                Text(
-                  countFormatted,
-                  style: AppTextStyles.statTileCount,
-                ),
-                Text(
-                  AppStrings.callsLower,
-                  style: AppTextStyles.statTileSub,
+                const SizedBox(height: 3),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        countFormatted,
+                        style: AppTextStyles.statTileCount,
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        AppStrings.callsLower,
+                        style: AppTextStyles.statTileSub,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

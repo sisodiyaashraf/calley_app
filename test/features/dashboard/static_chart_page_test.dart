@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:outline_pie_chart/outline_pie_chart.dart';
 import 'package:calley_app/core/constants/app_strings.dart';
 import 'package:calley_app/core/theme/app_theme.dart';
 import 'package:calley_app/core/widgets/dashboard_app_bar.dart';
@@ -33,6 +34,7 @@ void main() {
     expect(find.text('50'), findsOneWidget);
     expect(find.text(AppStrings.callsCaps), findsOneWidget);
     expect(find.byType(CallDonutChart), findsOneWidget);
+    expect(find.byType(PieChartWidget), findsOneWidget);
     expect(find.byType(StatsRow), findsOneWidget);
     expect(find.text(AppStrings.pendingLabel), findsOneWidget);
     expect(find.text('28'), findsOneWidget);

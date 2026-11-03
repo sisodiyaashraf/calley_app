@@ -60,12 +60,12 @@ class AppTextStyles {
 
   // Dashboard Selected List State
   static TextStyle get selectedListName => GoogleFonts.inter(fontSize: 14.0, fontWeight: FontWeight.w600, height: 1.2, color: AppColors.titleText);
-  static TextStyle get selectedListCount => GoogleFonts.inter(fontSize: 36.0, fontWeight: FontWeight.w700, height: 1.0, color: AppColors.primary);
-  static TextStyle get selectedListCallsLabel => GoogleFonts.inter(fontSize: 13.0, fontWeight: FontWeight.w500, height: 1.0, color: AppColors.titleText);
-  static TextStyle get selectedListAvatarLetter => GoogleFonts.inter(fontSize: 28.0, fontWeight: FontWeight.w600, height: 1.0, color: AppColors.whiteText);
-  static TextStyle get statTileLabel => GoogleFonts.inter(fontSize: 13.0, fontWeight: FontWeight.w600, height: 1.1, color: AppColors.titleText);
-  static TextStyle get statTileCount => GoogleFonts.inter(fontSize: 24.0, fontWeight: FontWeight.w700, height: 1.05, color: AppColors.titleText);
-  static TextStyle get statTileSub => GoogleFonts.inter(fontSize: 11.0, fontWeight: FontWeight.w400, height: 1.1, color: AppColors.subtitleText);
+  static TextStyle get selectedListCount => GoogleFonts.inter(fontSize: 28.0, fontWeight: FontWeight.w700, height: 1.0, color: AppColors.primary);
+  static TextStyle get selectedListCallsLabel => GoogleFonts.inter(fontSize: 12.0, fontWeight: FontWeight.w600, height: 1.0, color: AppColors.titleText);
+  static TextStyle get selectedListAvatarLetter => GoogleFonts.inter(fontSize: 26.0, fontWeight: FontWeight.w700, height: 1.0, color: AppColors.whiteText);
+  static TextStyle get statTileLabel => GoogleFonts.inter(fontSize: 13.0, fontWeight: FontWeight.w600, height: 1.2, color: const Color(0xFF1F2937));
+  static TextStyle get statTileCount => GoogleFonts.inter(fontSize: 19.0, fontWeight: FontWeight.w700, height: 1.1, color: const Color(0xFF111827));
+  static TextStyle get statTileSub => GoogleFonts.inter(fontSize: 11.0, fontWeight: FontWeight.w400, height: 1.1, color: const Color(0xFF4B5563));
 
   // Side Navigation Drawer
   static TextStyle get drawerHeaderName => GoogleFonts.inter(fontSize: 15.0, fontWeight: FontWeight.w700, color: AppColors.whiteText);

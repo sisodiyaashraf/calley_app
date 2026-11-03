@@ -26,7 +26,7 @@ class DashboardPage extends StatelessWidget {
     if (showChart != null) return showChart!;
     try {
       final nav = Provider.of<NavProvider>(context);
-      if (nav.showChart) return true;
+      return nav.showChart;
     } catch (_) {}
     try {
       final listP = Provider.of<CallingListProvider>(context);

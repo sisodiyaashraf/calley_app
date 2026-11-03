@@ -10,16 +10,18 @@ class SelectedListCard extends StatelessWidget {
     super.key,
     required this.listName,
     required this.totalCalls,
+    this.avatarLetter,
     this.onTap,
   });
 
   final String listName;
   final int totalCalls;
+  final String? avatarLetter;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final firstLetter = listName.isNotEmpty ? listName[0].toUpperCase() : '';
+    final letter = avatarLetter ?? (listName.isNotEmpty ? listName[0].toUpperCase() : '');
 
     return Container(
       height: AppDimens.selectedListHeight,
@@ -27,9 +29,9 @@ class SelectedListCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(AppDimens.selectedListRadius),
-        border: Border.all(color: AppColors.cardBorder, width: AppDimens.cardBorderWidth),
+        border: Border.all(color: const Color(0xFFE2E8F0), width: AppDimens.cardBorderWidth),
         boxShadow: const [
-          BoxShadow(color: AppColors.cardShadow, blurRadius: 4, offset: Offset(0, 1)),
+          BoxShadow(color: Color(0x0A000000), blurRadius: 8, offset: Offset(0, 2)),
         ],
       ),
       child: Material(
@@ -38,7 +40,7 @@ class SelectedListCard extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppDimens.selectedListRadius),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,11 +69,11 @@ class SelectedListCard extends StatelessWidget {
                   width: AppDimens.selectedListAvatarSize,
                   height: AppDimens.selectedListAvatarSize,
                   decoration: BoxDecoration(
-                    color: AppColors.primary,
+                    color: AppColors.donutDone,
                     borderRadius: BorderRadius.circular(AppDimens.selectedListRadius),
                   ),
                   alignment: Alignment.center,
-                  child: Text(firstLetter, style: AppTextStyles.selectedListAvatarLetter),
+                  child: Text(letter, style: AppTextStyles.selectedListAvatarLetter),
                 ),
               ],
             ),

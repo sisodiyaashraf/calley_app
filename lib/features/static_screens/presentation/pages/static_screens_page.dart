@@ -64,7 +64,7 @@ class StaticScreensPage extends StatelessWidget {
                   _tile(context, icon: Icons.mark_email_read_outlined, title: 'Screen 3: WhatsApp OTP', subtitle: '6-box OTP code verification', onTap: () => Navigator.pushNamed(context, AppRoutes.otp, arguments: '+91 9876543210')),
                   _tile(context, icon: Icons.login_outlined, title: 'Screen 4: Sign In', subtitle: 'Email and password authentication', onTap: () => Navigator.pushNamed(context, AppRoutes.signIn)),
                   _tile(context, icon: Icons.home_outlined, title: 'Screen 5: Home Dashboard', subtitle: 'Personal dashboard with video & actions', onTap: () => Navigator.pushNamed(context, AppRoutes.home)),
-                  _tile(context, icon: Icons.dashboard_outlined, title: 'Screen 6: Dashboard & Call Stats', subtitle: 'Call stats donut chart and stat tiles', onTap: () => Navigator.pushNamed(context, AppRoutes.dashboard)),
+                  _tile(context, icon: Icons.dashboard_outlined, title: 'Screen 6: Dashboard & Call Stats', subtitle: 'Call stats donut chart and stat tiles', onTap: () => Navigator.pushNamed(context, AppRoutes.staticChart)),
                   _tile(context, icon: Icons.settings_outlined, title: 'Screen 7: Settings', subtitle: 'Profile summary and app settings', onTap: () => Navigator.pushNamed(context, AppRoutes.settings)),
                   const SizedBox(height: 16),
                   Text('DRAWER & AUXILIARY STATIC SCREENS', style: AppTextStyles.cardTitle),

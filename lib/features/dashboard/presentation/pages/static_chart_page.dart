@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:outline_pie_chart/outline_pie_chart.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/dashboard_static_data.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -54,15 +55,18 @@ class StaticChartPage extends StatelessWidget {
                     child: IntrinsicHeight(
                       child: Column(
                         children: [
+                          const SizedBox(height: 12),
                           SelectedListCard(
                             listName: stats.listName,
                             totalCalls: stats.totalCalls,
+                            avatarLetter: 'S',
                             onTap: onListTap ?? () => CallingListsSheet.show(context),
                           ),
                           const Spacer(),
-                          const CallDonutChart(stats: stats),
+                          CallDonutChart(stats: stats),
                           const Spacer(),
                           const StatsRow(stats: stats),
+                          const SizedBox(height: 8),
                         ],
                       ),
                     ),
@@ -70,13 +74,12 @@ class StaticChartPage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
               child: PrimaryButton(
                 label: AppStrings.startCallingNow,
-                height: 46,
-                radius: 8,
+                height: 48,
+                radius: 10,
                 onPressed: onStartCallingTapped ?? () => CallingListsSheet.show(context),
               ),
             ),

@@ -81,12 +81,12 @@ class AppDimens {
   static const double refreshButtonHPadding = 10.0, refreshIconSize = 16.0;
 
   // Dashboard Selected List & Drawer
-  static const double selectedListMargin = 14.0, selectedListHeight = 98.0;
-  static const double selectedListRadius = 16.0, selectedListAvatarSize = 64.0;
-  static const double donutDiameter = 205.0, donutRingThickness = 32.0;
-  static const double statTileHeight = 80.0, statTileRadius = 16.0;
-  static const double statTilePadding = 12.0, statTileBarWidth = 4.0, statTileBarHeight = 34.0;
-  static const double statsRowGap = 9.0;
+  static const double selectedListMargin = 16.0, selectedListHeight = 82.0;
+  static const double selectedListRadius = 16.0, selectedListAvatarSize = 58.0;
+  static const double donutDiameter = 200.0, donutRingThickness = 30.0;
+  static const double statTileHeight = 82.0, statTileRadius = 16.0;
+  static const double statTilePadding = 10.0, statTileBarWidth = 4.0, statTileBarHeight = 46.0;
+  static const double statsRowGap = 10.0;
   static const double drawerWidthFactor = 0.73, drawerRadius = 20.0;
   static const double drawerHeaderHeight = 72.0, drawerHeaderPadding = 12.0;
   static const double drawerAvatarSize = 40.0, drawerAvatarGap = 12.0;

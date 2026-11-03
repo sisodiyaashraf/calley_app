@@ -14,12 +14,14 @@ class SelectedDashboardView extends StatelessWidget {
     required this.stats,
     required this.onStartCalling,
     this.onListTap,
+    this.avatarLetter,
     this.isSampleData = false,
   });
 
   final CallStats stats;
   final VoidCallback onStartCalling;
   final VoidCallback? onListTap;
+  final String? avatarLetter;
   final bool isSampleData;
 
   @override
@@ -35,28 +37,18 @@ class SelectedDashboardView extends StatelessWidget {
                   child: IntrinsicHeight(
                     child: Column(
                       children: [
+                        const SizedBox(height: 12),
                         SelectedListCard(
                           listName: stats.listName,
                           totalCalls: stats.totalCalls,
+                          avatarLetter: avatarLetter,
                           onTap: onListTap ?? () => CallingListsSheet.show(context),
                         ),
-                        if (isSampleData)
-                          const Padding(
-                            padding: EdgeInsets.only(top: 6),
-                            child: Text(
-                              'Showing sample data',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Color(0xFF64748B),
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
                         const Spacer(),
                         CallDonutChart(stats: stats),
                         const Spacer(),
                         StatsRow(stats: stats),
+                        const SizedBox(height: 8),
                       ],
                     ),
                   ),
@@ -65,13 +57,12 @@ class SelectedDashboardView extends StatelessWidget {
             },
           ),
         ),
-        const SizedBox(height: 16),
         Padding(
-          padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
           child: PrimaryButton(
             label: AppStrings.startCallingNow,
-            height: 46,
-            radius: 8,
+            height: 48,
+            radius: 10,
             onPressed: onStartCalling,
           ),
         ),

@@ -18,6 +18,7 @@ dependencies:
   url_launcher: ^6.3.2
   youtube_player_iframe: ^6.0.2
   shared_preferences: ^2.2.3
+  outline_pie_chart: ^0.0.1
 
 dev_dependencies:
   flutter_test:
