@@ -6,9 +6,12 @@ import '../providers/otp_provider.dart';
 
 /// Resend OTP link row using [AuthLinkText] with active countdown support.
 class ResendRow extends StatelessWidget {
-  const ResendRow({super.key, required this.phoneNumber});
+  const ResendRow({super.key, this.email = '', this.phoneNumber});
 
-  final String phoneNumber;
+  final String email;
+  final String? phoneNumber;
+
+  String get target => email.isNotEmpty ? email : (phoneNumber ?? '');
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class ResendRow extends StatelessWidget {
       linkText: p.resendLabel,
       onLinkTap: () {
         if (p.canResend) {
-          p.resend(phoneNumber);
+          p.resend(target);
         }
       },
     );

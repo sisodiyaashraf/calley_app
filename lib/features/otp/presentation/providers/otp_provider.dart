@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/network/api_exception.dart';
 import '../../domain/entities/otp_verification.dart';
 import '../../domain/usecases/resend_otp.dart';
 import '../../domain/usecases/verify_otp.dart';
@@ -28,10 +29,13 @@ class OtpProvider extends ChangeNotifier {
 
   void setCode(String newCode) {
     final clean = newCode.replaceAll(RegExp(r'\D'), '');
-    for (int i = 0; i < 6; i++) {
-      digits[i] = i < clean.length ? clean[i] : '';
-    }
+    for (int i = 0; i < 6; i++) { digits[i] = i < clean.length ? clean[i] : ''; }
     error = null;
+    notifyListeners();
+  }
+
+  void setError(String err) {
+    error = err;
     notifyListeners();
   }
 
@@ -41,40 +45,39 @@ class OtpProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> verify(String phone) async {
+  Future<bool> verify(String email) async {
     if (!isComplete) return false;
-    isLoading = true;
-    error = null;
-    notifyListeners();
+    isLoading = true; error = null; notifyListeners();
     try {
-      final ok = await _verifyOtp(OtpVerification(phone: phone, code: code));
+      final ok = await _verifyOtp(OtpVerification(email: email, code: code));
       if (ok) { onVerified?.call(); return true; }
       error = AppStrings.errInvalidOtp;
+      return false;
+    } on AppException catch (e) {
+      error = (e.statusCode != null && e.statusCode! >= 400 && e.statusCode! < 500)
+          ? AppStrings.errInvalidOtp
+          : AppStrings.errGeneric;
       return false;
     } catch (_) {
       error = AppStrings.errGeneric;
       return false;
     } finally {
-      isLoading = false;
-      notifyListeners();
+      isLoading = false; notifyListeners();
     }
   }
 
-  Future<bool> resend(String phone) async {
+  Future<bool> resend(String email) async {
     if (!canResend) return false;
-    isLoading = true;
-    error = null;
-    notifyListeners();
+    isLoading = true; error = null; notifyListeners();
     try {
-      final ok = await _resendOtp(phone);
+      final ok = await _resendOtp(email);
       if (ok) { clearDigits(); _startCountdown(); }
       return ok;
     } catch (_) {
       error = AppStrings.errGeneric;
       return false;
     } finally {
-      isLoading = false;
-      notifyListeners();
+      isLoading = false; notifyListeners();
     }
   }
 
@@ -88,8 +91,5 @@ class OtpProvider extends ChangeNotifier {
   }
 
   @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
+  void dispose() { _timer?.cancel(); super.dispose(); }
 }

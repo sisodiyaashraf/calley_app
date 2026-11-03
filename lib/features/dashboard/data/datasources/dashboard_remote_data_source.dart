@@ -1,4 +1,5 @@
 import '../../../../core/network/api_client.dart';
+import '../../../../core/network/api_exception.dart';
 import '../../../../core/session/session.dart';
 import '../models/list_details_model.dart';
 
@@ -14,6 +15,10 @@ class DashboardRemoteDataSource {
   final Session _session;
 
   Future<ListDetailsModel> fetchListDetails(String listId) async {
+    if (_session.userId.isEmpty) {
+      throw const AppException('Please sign in again');
+    }
+
     final response = await _apiClient.getWithBody(
       '/list/$listId',
       body: {'email': _session.email},

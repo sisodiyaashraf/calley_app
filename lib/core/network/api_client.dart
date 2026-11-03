@@ -16,6 +16,22 @@ class ApiClient {
     String path, {
     Map<String, String>? query,
     Map<String, dynamic>? body,
+  }) => _send('GET', path, query: query, body: body);
+
+  /// Executes a POST request with JSON body and query parameters.
+  Future<dynamic> post(
+    String path, {
+    Map<String, String>? query,
+    Map<String, dynamic>? body,
+    Map<String, String>? headers,
+  }) => _send('POST', path, query: query, body: body, headers: headers);
+
+  Future<dynamic> _send(
+    String method,
+    String path, {
+    Map<String, String>? query,
+    Map<String, dynamic>? body,
+    Map<String, String>? headers,
   }) async {
     try {
       final fullPath = path.startsWith('http') ? path : '${ApiConfig.baseUrl}$path';
@@ -24,21 +40,19 @@ class ApiClient {
           ? baseUri.replace(queryParameters: {...baseUri.queryParameters, ...query})
           : baseUri;
 
-      final request = http.Request('GET', uri);
+      final request = http.Request(method, uri);
       request.headers['Content-Type'] = 'application/json';
-      if (body != null) {
-        request.body = jsonEncode(body);
-      }
+      if (headers != null) request.headers.addAll(headers);
+      if (body != null) request.body = jsonEncode(body);
 
-      final streamedResponse = await _client.send(request).timeout(ApiConfig.timeout);
-      final response = await http.Response.fromStream(streamedResponse).timeout(ApiConfig.timeout);
+      final streamed = await _client.send(request).timeout(ApiConfig.timeout);
+      final response = await http.Response.fromStream(streamed).timeout(ApiConfig.timeout);
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         if (response.body.isEmpty) return null;
         return jsonDecode(response.body);
-      } else {
-        throw AppException.fromStatus(response.statusCode);
       }
+      throw AppException.fromStatus(response.statusCode);
     } on TimeoutException {
       throw const AppException('Request timed out');
     } on SocketException {

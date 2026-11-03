@@ -28,7 +28,7 @@ class RegisterPage extends StatelessWidget {
       Session.instance.update(newName: p.name.trim(), newEmail: p.email.trim());
       try { context.read<Session?>()?.update(newName: p.name.trim(), newEmail: p.email.trim()); } catch (_) {}
       final cb = onRegistered ?? p.onRegistered;
-      cb != null ? cb() : AppRouter.toOtp(context, '${p.countryCode} ${p.phone}');
+      cb != null ? cb() : AppRouter.toOtp(context, p.email.trim());
     } else if (p.generalError != null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(p.generalError!), backgroundColor: AppColors.errorText));
     }

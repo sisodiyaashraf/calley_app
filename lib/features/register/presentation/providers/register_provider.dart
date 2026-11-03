@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/network/api_exception.dart';
 import '../../../../core/utils/validators.dart';
 import '../../domain/entities/register_request.dart';
 import '../../domain/usecases/register_user.dart';
@@ -81,6 +82,9 @@ class RegisterProvider extends ChangeNotifier {
       final success = await _registerUser(request);
       if (success) onRegistered?.call();
       return success;
+    } on AppException catch (e) {
+      generalError = e.message;
+      return false;
     } catch (_) {
       generalError = AppStrings.errGeneric;
       return false;

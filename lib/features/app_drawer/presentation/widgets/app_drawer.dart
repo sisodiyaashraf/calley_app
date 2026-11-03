@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/navigation/app_router.dart';
+import '../../../../core/session/pending_registration.dart';
 import '../../../../core/session/session.dart';
 import '../../../../core/session/session_storage.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -45,7 +46,7 @@ class AppDrawer extends StatelessWidget {
         final confirmed = await LogoutConfirmDialog.show(context);
         if (confirmed == true && context.mounted) {
           try { context.read<Session?>()?.clear(); } catch (_) {}
-          Session.instance.clear(); await SessionStorage.clear();
+          Session.instance.clear(); await SessionStorage.clear(); PendingRegistration.clear();
           if (drawer != null) await drawer.logout();
           if (context.mounted) AppRouter.toLanguage(context);
         }

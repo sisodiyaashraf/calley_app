@@ -28,17 +28,20 @@ import 'features/language/data/repositories/language_repository_impl.dart';
 import 'features/language/domain/usecases/get_languages.dart';
 import 'features/language/domain/usecases/select_language.dart';
 import 'features/language/presentation/providers/language_provider.dart';
-import 'features/otp/data/datasources/otp_mock_data_source.dart';
+import 'features/otp/data/datasources/otp_remote_data_source.dart';
 import 'features/otp/data/repositories/otp_repository_impl.dart';
 import 'features/otp/domain/usecases/resend_otp.dart';
 import 'features/otp/domain/usecases/verify_otp.dart';
 import 'features/otp/presentation/providers/otp_provider.dart';
-import 'features/register/data/datasources/register_mock_data_source.dart';
+import 'features/register/data/datasources/register_remote_data_source.dart';
 import 'features/register/data/repositories/register_repository_impl.dart';
 import 'features/register/domain/usecases/register_user.dart';
 import 'features/register/presentation/providers/register_provider.dart';
+import 'features/sign_in/data/datasources/auth_remote_data_source.dart';
 import 'features/sign_in/data/datasources/sign_in_mock_data_source.dart';
+import 'features/sign_in/data/repositories/auth_repository_impl.dart';
 import 'features/sign_in/data/repositories/sign_in_repository_impl.dart';
+import 'features/sign_in/domain/usecases/login_user.dart';
 import 'features/sign_in/domain/usecases/sign_in_user.dart';
 import 'features/sign_in/presentation/providers/sign_in_provider.dart';
 
@@ -53,14 +56,18 @@ class CalleyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final session = Session.instance, apiClient = ApiClient(http.Client());
     final langRepo = LanguageRepositoryImpl(const LanguageLocalDataSource());
-    final regRepo = RegisterRepositoryImpl(const RegisterMockDataSource()), otpRepo = OtpRepositoryImpl(const OtpMockDataSource());
-    final signInRepo = SignInRepositoryImpl(const SignInMockDataSource()), homeRepo = HomeRepositoryImpl(const HomeMockDataSource());
+    final otpRepo = OtpRepositoryImpl(OtpRemoteDataSource(apiClient));
+    final regRepo = RegisterRepositoryImpl(RegisterRemoteDataSource(apiClient), otpRepo);
+    final signInRepo = SignInRepositoryImpl(const SignInMockDataSource());
+    final authRepo = AuthRepositoryImpl(AuthRemoteDataSource(apiClient));
+    final homeRepo = HomeRepositoryImpl(const HomeMockDataSource());
     final dashRepo = DashboardRepositoryImpl(DashboardRemoteDataSource(apiClient: apiClient, session: session));
     final listRepo = CallingListRepositoryImpl(CallingListRemoteDataSource(apiClient: apiClient, session: session));
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: Session.instance),
+        Provider<LoginUser>.value(value: LoginUser(authRepo)),
         ChangeNotifierProvider(create: (_) => NavProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider(
           getLanguages: GetLanguages(langRepo), selectLanguage: SelectLanguage(langRepo),
@@ -68,7 +75,7 @@ class CalleyApp extends StatelessWidget {
         )),
         ChangeNotifierProvider(create: (_) {
           final p = RegisterProvider(registerUser: RegisterUser(regRepo));
-          p.onRegistered = () => navigatorKey.currentState?.pushReplacementNamed(AppRoutes.otp, arguments: '${p.countryCode} ${p.phone}');
+          p.onRegistered = () => navigatorKey.currentState?.pushReplacementNamed(AppRoutes.otp, arguments: p.email.trim());
           return p;
         }),
         ChangeNotifierProvider(create: (_) => OtpProvider(verifyOtp: VerifyOtp(otpRepo), resendOtp: ResendOtp(otpRepo))),

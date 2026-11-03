@@ -1,10 +1,12 @@
 /// Value object representing OTP verification details.
 class OtpVerification {
   const OtpVerification({
-    required this.phone,
+    required this.email,
     required this.code,
   });
 
-  final String phone;
+  final String email;
   final String code;
+
+  String get phone => email;
 }

@@ -53,7 +53,7 @@ void main() {
     });
 
     final apiClient = ApiClient(client);
-    final session = Session();
+    final session = Session(userId: '68626f9497757cb741f449b0', email: 'dhrubo@yopmail.com');
     final dataSource = DashboardRemoteDataSource(apiClient: apiClient, session: session);
     final repo = DashboardRepositoryImpl(dataSource);
 

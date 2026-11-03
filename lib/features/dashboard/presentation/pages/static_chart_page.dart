@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:outline_pie_chart/outline_pie_chart.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/dashboard_static_data.dart';
 import '../../../../core/theme/app_colors.dart';

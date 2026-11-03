@@ -45,8 +45,8 @@ class AppRouter {
       case AppRoutes.language: return MaterialPageRoute(builder: (_) => const ChooseLanguagePage(), settings: settings);
       case AppRoutes.register: return MaterialPageRoute(builder: (_) => const RegisterPage(), settings: settings);
       case AppRoutes.otp:
-        final phone = (settings.arguments as String?) ?? '+91';
-        return MaterialPageRoute(builder: (_) => OtpPage(phoneNumber: phone), settings: settings);
+        final emailOrPhone = (settings.arguments as String?) ?? '';
+        return MaterialPageRoute(builder: (_) => OtpPage(email: emailOrPhone), settings: settings);
       case AppRoutes.signIn: return MaterialPageRoute(builder: (_) => const SignInPage(), settings: settings);
       case AppRoutes.home: return MaterialPageRoute(builder: (_) => const FirstTimeHomePage(), settings: settings);
       case AppRoutes.main:
@@ -66,7 +66,7 @@ class AppRouter {
   static void toRegister(BuildContext context) => Navigator.pushNamed(context, AppRoutes.register);
   static void toSignIn(BuildContext context) => Navigator.pushNamed(context, AppRoutes.signIn);
   static void toRegisterFromSignIn(BuildContext context) => Navigator.pushReplacementNamed(context, AppRoutes.register);
-  static void toOtp(BuildContext context, String phone) => Navigator.pushReplacementNamed(context, AppRoutes.otp, arguments: phone);
+  static void toOtp(BuildContext context, String email) => Navigator.pushReplacementNamed(context, AppRoutes.otp, arguments: email);
   static void toHome(BuildContext context) => Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (_) => false);
   static void toLanguage(BuildContext context) => Navigator.pushNamedAndRemoveUntil(context, AppRoutes.language, (_) => false);
   static void toMain(BuildContext context) => Navigator.pushReplacementNamed(context, AppRoutes.main);

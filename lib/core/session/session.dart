@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 /// In-memory user session holding authentication tokens and user credentials.
 class Session extends ChangeNotifier {
   Session({
-    this.userId = '68626f9497757cb741f449b0',
+    this.userId = '',
     String? email,
     String? name,
-  })  : _email = email ?? 'dhrubo@yopmail.com',
+  })  : _email = email ?? '',
         _name = name ?? '';
 
   static final Session instance = Session();
@@ -39,6 +39,7 @@ class Session extends ChangeNotifier {
   }
 
   void clear() {
+    userId = '';
     _name = '';
     _email = '';
     notifyListeners();

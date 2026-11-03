@@ -1,4 +1,5 @@
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/network/api_exception.dart';
 import '../../domain/entities/calling_list.dart';
 import '../../domain/repositories/calling_list_repository.dart';
 import '../datasources/calling_list_remote_data_source.dart';
@@ -20,6 +21,8 @@ class CallingListRepositoryImpl implements CallingListRepository {
         _cachedLists = models.map((m) => m.toEntity()).toList();
         return _cachedLists;
       }
+    } on AppException {
+      rethrow;
     } catch (_) {}
     _cachedLists = const [
       CallingList(id: '1', name: AppStrings.testList, totalCalls: 50),

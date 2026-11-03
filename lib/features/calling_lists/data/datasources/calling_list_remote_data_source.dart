@@ -1,4 +1,5 @@
 import '../../../../core/network/api_client.dart';
+import '../../../../core/network/api_exception.dart';
 import '../../../../core/session/session.dart';
 import '../models/calling_list_model.dart';
 
@@ -14,6 +15,10 @@ class CallingListRemoteDataSource {
   final Session _session;
 
   Future<List<CallingListModel>> fetchCallingLists() async {
+    if (_session.userId.isEmpty) {
+      throw const AppException('Please sign in again');
+    }
+
     final response = await _apiClient.getWithBody(
       '/list',
       query: {'userId': _session.userId},

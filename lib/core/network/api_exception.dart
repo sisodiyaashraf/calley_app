@@ -27,3 +27,5 @@ class AppException implements Exception {
     return AppException('Something went wrong ($statusCode)', statusCode: statusCode);
   }
 }
+
+typedef ApiException = AppException;
